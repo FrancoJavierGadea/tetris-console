@@ -1,0 +1,45 @@
+
+
+tetris-svg {
+
+    rect.draw-L {
+
+        fill: #f00;
+    }
+
+    /* Pieza L (Naranja) */
+    rect.draw-L {
+        fill: #f90; /* Naranja */
+    }
+
+    /* Pieza J (Azul) */
+    rect.draw-J {
+        fill: #00f; /* Azul */
+    }
+
+    /* Pieza I (Cian) */
+    rect.draw-I {
+        fill: #0ff; /* Cian */
+    }
+
+    /* Pieza O (Amarillo) */
+    rect.draw-O {
+        fill: #ff0; /* Amarillo */
+    }
+
+    /* Pieza S (Verde) */
+    rect.draw-S {
+        fill: #0f0; /* Verde */
+    }
+
+    /* Pieza Z (Rojo) */
+    rect.draw-Z {
+        fill: #f00; /* Rojo */
+    }
+
+    /* Pieza T (Púrpura) */
+    rect.draw-T {
+        fill: #a0f; /* Púrpura */
+    }
+
+}

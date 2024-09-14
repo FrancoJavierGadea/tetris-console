@@ -1,0 +1,41 @@
+---
+import SVG from "../assets/background-2.svg?raw";
+import "../css/pieces-color.css";
+---
+
+
+
+
+<tetris-svg>
+
+    <Fragment set:html={SVG}></Fragment>
+
+</tetris-svg>
+
+
+<script>
+
+    import { TetrisSVG } from "../web-components/tetris-svg.js";
+
+    customElements.define('tetris-svg', TetrisSVG);
+</script>
+
+
+<style>
+
+    tetris-svg {
+        display: block;
+        overflow: hidden;
+        max-width: 100vw;
+        max-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    tetris-svg :global(svg) {
+        margin: 0;
+        padding: 0;
+        position: relative;
+        left: -600px;
+        top: -50px;
+    }
+</style>
