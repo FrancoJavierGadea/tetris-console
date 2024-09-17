@@ -1,5 +1,4 @@
 ---
-import SVG from "../assets/background-2.svg?raw";
 import "../css/pieces-color.css";
 ---
 
@@ -8,7 +7,7 @@ import "../css/pieces-color.css";
 
 <tetris-svg>
 
-    <Fragment set:html={SVG}></Fragment>
+    <slot></slot>
 
 </tetris-svg>
 
@@ -32,10 +31,11 @@ import "../css/pieces-color.css";
         padding: 0;
     }
     tetris-svg :global(svg) {
+
+        width: 100%;
+        height: 100%;
         margin: 0;
         padding: 0;
         position: relative;
-        left: -600px;
-        top: -50px;
     }
 </style>

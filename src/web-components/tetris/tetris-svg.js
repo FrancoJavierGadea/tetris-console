@@ -21,7 +21,7 @@ export class TetrisSVG extends HTMLElement {
         this.$SVG = {
             getCell: (r, c) => {
                 
-                return this.querySelector(`svg g.Board rect[${this.cellAttr(r, c)}]`);
+                return this.querySelector(`svg g.Board [${this.cellAttr(r, c)}]`);
             }
         };
 
@@ -34,7 +34,6 @@ export class TetrisSVG extends HTMLElement {
 
         this.tetris.play(1000, () => {
 
-            console.log('draw');
             this.drawBoard();
         });
 
