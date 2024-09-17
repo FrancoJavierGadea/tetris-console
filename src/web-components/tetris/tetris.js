@@ -1,5 +1,12 @@
 import { getRandomPiece, PIECES } from "./tetris-pieces";
 
+export const COLLIONS = {
+    TOP: 'top',
+    LEFT: 'left',
+    RIGHT: 'right',
+    BOTTOM: 'bottom',
+    NONE: 'none'
+}
 
 export class Tetris {
 
@@ -9,7 +16,7 @@ export class Tetris {
     constructor({rows = 20, columns = 10} =  {}){
 
         this.rows = rows;
-        this.colums = columns;
+        this.columns = columns;
 
         this.board = Array.from({length: rows}, () => {
 
@@ -25,7 +32,7 @@ export class Tetris {
         //Set piece initial position
         piece.position = {
             row: 0, 
-            column: Math.floor((this.colums / 2) - (piece.size.columns / 2))
+            column: Math.floor((this.columns / 2) - (piece.size.columns / 2))
         };
 
         this.#currentPiece = piece;
@@ -72,7 +79,7 @@ export class Tetris {
 
     movePiece({columns = 0, rows = 0}){
 
-        if(this.detectCollisions({columns, rows})) return;
+        if(this.detectCollisions({columns, rows}) !== COLLIONS.NONE) return;
 
         if(rows > 0){
 
@@ -89,6 +96,10 @@ export class Tetris {
         const piece = this.#currentPiece;
 
         if(piece.name === PIECES.O.name) return;
+
+        console.log(this.canRotate())
+
+        if(!this.canRotate()) return;
 
         const {rows, columns} = piece.size;
 
@@ -114,27 +125,53 @@ export class Tetris {
 
         const piece = this.#currentPiece;
 
-        console.log(piece.position)
+        console.log(piece.position);
 
-        //With the Board
+        //Border Left
         if(piece.position.column + columns < 0){
 
-            console.log('Border left');
-            return true;
+            return COLLIONS.LEFT;
         }
         
-        if(piece.position.column + columns > this.colums - piece.size.columns){
+        //Border Right
+        if(piece.position.column + columns > this.columns - piece.size.columns){
 
-            console.log('Border Right');
-            return true;
+            return COLLIONS.RIGHT;
         }
 
+        //Border Bottom
         if(piece.position.row + rows > this.rows - piece.size.rows){
 
-            console.log('Border bottom');
-            return true;
+            return COLLIONS.BOTTOM;
         }
-        
+
+        //Collisions with other pieces
+
+        if(rows > 0){
+
+            for (let i = 0; i < piece.size.columns; i++) {
+
+                const n = this.board.at(piece.position.row + piece.size.rows + rows - 1)?.at(piece.position.column + i);
+                
+                if(n !== 0) return COLLIONS.BOTTOM;
+            }
+        } 
+
+        return COLLIONS.NONE;
+    }
+
+    canRotate(){
+
+        const piece = this.#currentPiece;
+
+        return [
+            //Border Right
+            piece.position.column + piece.size.rows <= this.columns,
+
+            //Border Bottom
+            piece.position.row + piece.size.columns <= this.rows
+
+        ].every(v => v);
     }
 
 
@@ -150,7 +187,7 @@ export class Tetris {
             this.movePiece({rows: 1});
             this.putPiece();
 
-            if(this.#currentPiece.position.rows > this.rows - this.#currentPiece.size.rows){
+            if(this.detectCollisions({rows: 1}) === COLLIONS.BOTTOM){
 
                 this.spawnPiece();
             }

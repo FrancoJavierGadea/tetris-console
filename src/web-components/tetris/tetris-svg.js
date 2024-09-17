@@ -32,11 +32,11 @@ export class TetrisSVG extends HTMLElement {
 
         this.drawBoard();
 
-        // this.tetris.play(1000, () => {
+        this.tetris.play(1000, () => {
 
-        //     console.log('draw');
-        //     this.drawBoard();
-        // });
+            console.log('draw');
+            this.drawBoard();
+        });
 
         //Events
         document.documentElement.addEventListener('keydown', (e) => {
