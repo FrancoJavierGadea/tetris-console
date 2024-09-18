@@ -32,7 +32,16 @@ export class Tetris {
         });
     }
 
-
+    //MARK: Spawn piece
+    /**
+     * Spawn new piece and set the **current piece** by **spawn mode**:
+     * 
+     * - `SPAWN_MODES.RANDOM`
+     * - `SPAWN_MODES.CENTER`
+     * - `SPAWN_MODES.RANDOM_ROTATE`
+     * 
+     * Reset the board when the previous current **piece** is high on the board
+     */
     spawnPiece(){
 
         if(this.#currentPiece?.position?.row <= 1) this.resetBoard();
@@ -42,7 +51,6 @@ export class Tetris {
         //Set piece initial position
         let row = 0;
         let column = 0;
-
 
         switch(this.spawnMode){
 
@@ -71,7 +79,10 @@ export class Tetris {
         this.putPiece();
     }
 
-    //Put a piece on board over it position
+    //MARK: Put piece
+    /**
+     * Put the **current piece** on the board
+     */
     putPiece(){
 
         const piece = this.#currentPiece;
@@ -90,7 +101,10 @@ export class Tetris {
         }
     }
 
-    //Remove a piece from board on it position
+    //MARK: Clear piece
+    /**
+     * Remove the **current piece** from board
+     */
     clearPiece(){
 
         const piece = this.#currentPiece;
@@ -110,11 +124,19 @@ export class Tetris {
     }
 
 
+    //MARK: Move Piece
+    /**
+     * Move the **current piece** to left, right and bottom.
+     * Detect collisions beetwen Pieces and the board.
+     * Check clear rows and Spawn a new Piece when collision is BOTTOM
+     * 
+     * @param {{columns:Integer, rows:Integer}} params  
+     */
     movePiece({columns = 0, rows = 0}){
 
-        this.clearPiece();
+        this.clearPiece();//Remove piece from board
 
-        //Calculate collisions
+        //Detect collisions
         const collision = this.detectCollisions({columns, rows});
         
         console.log(collision);
@@ -124,6 +146,7 @@ export class Tetris {
             //Put the current piece
             this.putPiece();
 
+            //Check rows
             this.clearRows();
 
             //Spawn new piece
@@ -147,9 +170,31 @@ export class Tetris {
             this.#currentPiece.position.column += columns;
         }
 
-        this.putPiece();
+        this.putPiece();//Put the current piece
     }
 
+
+    movePieceToDown(){
+
+        let rows = 0;
+
+        while(this.detectCollisions({rows: rows + 1}) === COLLIONS.NONE){
+
+            rows++;
+        }
+
+        //Move to down
+        this.movePiece({rows});
+
+        //Move one more to shoot collision and spawn new piece
+        this.movePiece({rows: 1});
+    }
+
+    //MARK: Rotate piece
+    /**
+     * 
+     *  
+     */
     rotatePiece(){
 
         const piece = this.#currentPiece;
@@ -158,8 +203,10 @@ export class Tetris {
 
         console.log(this.canRotate())
 
+        //Check if piece can rotate
         if(!this.canRotate()) return;
 
+        //Rotate the piece 90 deg
         const {rows, columns} = piece.size;
 
         const array = Array.from({length: columns}, () => new Array(rows).fill(0));
@@ -179,7 +226,7 @@ export class Tetris {
         };
     }
 
-
+    //MARK: Detect collisions
     detectCollisions({rows = 0, columns = 0} = {}){
 
         const piece = this.#currentPiece;
@@ -229,20 +276,39 @@ export class Tetris {
         return COLLIONS.NONE;
     }
 
+    //MARK: Can rotate
     canRotate(){
 
         const piece = this.#currentPiece;
 
-        return [
-            //Border Right
-            piece.position.column + piece.size.rows <= this.columns,
+        //Border left
+        if(piece.position.column + piece.size.rows > this.columns) return false;
 
-            //Border Bottom
-            piece.position.row + piece.size.columns <= this.rows
+        //Border Bottom
+        if(piece.position.row + piece.size.columns > this.rows) return false;
 
-        ].every(v => v);
+        //Collision with other pieces
+        for (let i = 0; i < piece.size.rows; i++) {
+
+            for (let j = 0; j < piece.size.columns; j++) {
+
+                const letter = piece.array[i][j];
+
+                if(letter !== 0){
+
+                    const n = this.board
+                        .at(piece.position.row + j)
+                        ?.at(piece.position.column + (piece.size.rows - 1 - i));
+
+                    if(n !== 0) return false;
+                }
+            }  
+        }
+
+        return true;
     }
 
+    //MARK: Reset board
     resetBoard(){
 
         for (let i = 0; i < this.rows; i++) {
@@ -254,6 +320,7 @@ export class Tetris {
         }
     }
 
+    //MARK: Clear rows
     clearRows(){
 
         for (let i = 0; i < this.rows; i++) {
@@ -301,24 +368,4 @@ export class Tetris {
     }
 
 
-    #intervalID = null;
-
-    play(time = 1000, cb = () => {}){
-
-        if(this.#intervalID) this.pause();
-
-        this.#intervalID = setInterval(() => {
-
-            this.movePiece({rows: 1});
-
-            // Ejecuta un callback para actualizar la vista
-            cb();
-
-        }, time);
-    }
-
-    pause(){
-
-        if(this.#intervalID) clearInterval(this.#intervalID);
-    }
 }

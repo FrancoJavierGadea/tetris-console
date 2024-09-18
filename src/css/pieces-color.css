@@ -1,45 +1,66 @@
 
+[theme="light"] tetris-svg, tetris-svg {
+
+    /* Colores de las piezas */
+    --tetris-piece-i: #00bcbc;    /* Cian oscuro */
+    --tetris-piece-j: #0038bc;    /* Azul oscuro */
+    --tetris-piece-l: #bc6f00;    /* Naranja oscuro */
+    --tetris-piece-o: #bcb800;    /* Amarillo oscuro */
+    --tetris-piece-s: #00bc00;    /* Verde oscuro */
+    --tetris-piece-t: #7b00bc;    /* Púrpura oscuro */
+    --tetris-piece-z: #bc0000;    /* Rojo oscuro */
+
+    /* Colores adicionales */
+    --tetris-board-border: #cccccc;  /* Gris claro para los bordes */
+    --tetris-empty-cell: #f0f0f0;    /* Gris muy claro para celdas vacías */
+    
+    
+}
+
+[theme="dark"] tetris-svg {
+
+    /* Colores de las piezas */
+    --tetris-piece-i: #00f0f0;    /* Cian */
+    --tetris-piece-j: #0051f0;    /* Azul */
+    --tetris-piece-l: #f0a000;    /* Naranja */
+    --tetris-piece-o: #f0f000;    /* Amarillo */
+    --tetris-piece-s: #00f000;    /* Verde */
+    --tetris-piece-t: #a000f0;    /* Púrpura */
+    --tetris-piece-z: #f00000;    /* Rojo */
+
+    /* Colores adicionales */
+    --tetris-board-border: #444444;  /* Gris oscuro para los bordes */
+    --tetris-empty-cell: #111111;    /* Gris muy oscuro para celdas vacías */
+}
 
 tetris-svg {
 
     .draw-L {
-
-        fill: #f00;
+        fill: var(--tetris-piece-l);
     }
 
-    /* Pieza L (Naranja) */
-    .draw-L {
-        fill: #f90; /* Naranja */
-    }
-
-    /* Pieza J (Azul) */
     .draw-J {
-        fill: #00f; /* Azul */
+        fill: var(--tetris-piece-j);
     }
 
-    /* Pieza I (Cian) */
     .draw-I {
-        fill: #0ff; /* Cian */
+        fill: var(--tetris-piece-i);
     }
 
-    /* Pieza O (Amarillo) */
     .draw-O {
-        fill: #ff0; /* Amarillo */
+        fill: var(--tetris-piece-o);
     }
 
-    /* Pieza S (Verde) */
     .draw-S {
-        fill: #0f0; /* Verde */
+        fill: var(--tetris-piece-s);
     }
 
-    /* Pieza Z (Rojo) */
     .draw-Z {
-        fill: #f00; /* Rojo */
+        fill: var(--tetris-piece-z);
     }
 
-    /* Pieza T (Púrpura) */
     .draw-T {
-        fill: #a0f; /* Púrpura */
+        fill: var(--tetris-piece-t);
     }
 
 }

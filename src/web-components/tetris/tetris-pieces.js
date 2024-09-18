@@ -6,12 +6,11 @@ export const PIECES = {
         array: [
             ['L', 0],
             ['L', 0],
-            ['L', 0],
             ['L', 'L']
         ],
         size: {
             columns: 2,
-            rows: 4
+            rows: 3
         }
     },
     'J': {
@@ -19,12 +18,11 @@ export const PIECES = {
         array: [
             [0, 'J'],
             [0, 'J'],
-            [0, 'J'],
             ['J', 'J']
         ],
         size: {
             columns: 2,
-            rows: 4
+            rows: 3
         }
     },
     'S': {
@@ -69,6 +67,19 @@ export const PIECES = {
         size: {
             columns: 2,
             rows: 2
+        }
+    },
+    'I': {
+        name: 'I',
+        array: [
+            ['I'],
+            ['I'],
+            ['I'],
+            ['I'] 
+        ],
+        size: {
+            columns: 1,
+            rows: 4
         }
     }
 };
