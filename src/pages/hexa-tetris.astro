@@ -1,0 +1,16 @@
+---
+import Tetris from "../components/Tetris.astro";
+import Layout from "../layouts/layout.astro";
+
+import SVG from "../assets/background-4.svg?raw";
+---
+
+<Layout>
+
+	<Tetris>
+	
+		<Fragment set:html={SVG}></Fragment>
+	
+	</Tetris>
+
+</Layout>

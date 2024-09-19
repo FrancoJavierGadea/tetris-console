@@ -69,6 +69,8 @@ export class TetrisSVG extends HTMLElement {
         });
 
         this.initGame();
+
+        window.pause = this.pause.bind(this);
     }
 
     //MARK: Init game
@@ -104,23 +106,40 @@ export class TetrisSVG extends HTMLElement {
 
 
     //MARK: Tetris game loop
-    #intervalID = null;
+    #animationID = null;
 
     play(time = 1000){
 
-        if(this.#intervalID) this.pause();
+        this.pause();
 
-        this.#intervalID = setInterval(() => {
+        let delta = 0;
+        let lastTime = 0;
 
-            this.tetris.movePiece({rows: 1});
+        const animation = (t = 0) => {
 
-            this.drawBoard();
+            delta += t - lastTime;
+            lastTime = t;
 
-        }, time);
+            if(delta > time){
+
+                delta = 0;
+
+                this.tetris.movePiece({rows: 1});
+
+                this.drawBoard();
+            }
+
+            this.#animationID = requestAnimationFrame(animation);
+        }
+
+        animation();
     }
 
     pause(){
+    
+        if(this.#animationID){
 
-        if(this.#intervalID) clearInterval(this.#intervalID);
+            cancelAnimationFrame(this.#animationID);
+        }
     }
 }
