@@ -1,0 +1,36 @@
+---
+---
+
+
+<tetris-canvas>
+
+    <slot></slot>
+
+</tetris-canvas>
+
+
+<script>
+
+    import { TetrisCanvas } from "../web-components/tetris/tetris-canvas.js";
+
+    customElements.define('tetris-canvas', TetrisCanvas);
+</script>
+
+
+<style>
+
+    tetris-canvas {
+        display: block;
+        overflow: hidden;
+        max-width: 100vw;
+        max-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+    tetris-canvas :global(canvas) {
+
+        display: block;
+        margin: 20px auto;
+        outline: 1px dashed gray;
+    }
+</style>

@@ -1,5 +1,5 @@
 ---
-import Tetris from "../components/Tetris.astro";
+import TetrisSVG from "../components/TetrisSVG.astro";
 import Layout from "../layouts/layout.astro";
 
 import SVG from "../assets/background-4.svg?raw";
@@ -7,10 +7,10 @@ import SVG from "../assets/background-4.svg?raw";
 
 <Layout>
 
-	<Tetris>
+	<TetrisSVG>
 	
 		<Fragment set:html={SVG}></Fragment>
 	
-	</Tetris>
+	</TetrisSVG>
 
 </Layout>

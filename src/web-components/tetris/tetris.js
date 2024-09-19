@@ -157,7 +157,11 @@ export class Tetris {
         else {
 
             //Don't move the piece
-            if(collision !== COLLIONS.NONE) return;
+            if(collision !== COLLIONS.NONE){
+
+                this.putPiece();//Put the current piece
+                return;
+            };
         }
 
         //Move the piece if not collisions
@@ -173,8 +177,10 @@ export class Tetris {
         this.putPiece();//Put the current piece
     }
 
-
+    //MARK: Move piece to down
     movePieceToDown(){
+
+        this.clearPiece();
 
         let rows = 0;
 
@@ -182,6 +188,8 @@ export class Tetris {
 
             rows++;
         }
+
+        this.putPiece();
 
         //Move to down
         this.movePiece({rows});
@@ -197,11 +205,16 @@ export class Tetris {
      */
     rotatePiece(){
 
+        this.clearPiece();
+
         const piece = this.#currentPiece;
 
-        if(piece.name === PIECES.O.name) return;
+        //Don't rotate piece 'O'
+        if(piece.name === PIECES.O.name){
 
-        console.log(this.canRotate())
+            this.putPiece();
+            return;
+        };
 
         //Check if piece can rotate
         if(!this.canRotate()) return;
@@ -224,6 +237,8 @@ export class Tetris {
             rows: columns,
             columns: rows
         };
+
+        this.putPiece();
     }
 
     //MARK: Detect collisions

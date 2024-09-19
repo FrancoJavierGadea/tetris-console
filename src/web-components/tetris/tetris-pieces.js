@@ -11,6 +11,10 @@ export const PIECES = {
         size: {
             columns: 2,
             rows: 3
+        },
+        color: {
+            dark: '#f0a000',
+            light: '#bc6f00'
         }
     },
     'J': {
@@ -23,6 +27,10 @@ export const PIECES = {
         size: {
             columns: 2,
             rows: 3
+        },
+        color: {
+            dark: '#0051f0',
+            light: '#0038bc'
         }
     },
     'S': {
@@ -34,6 +42,10 @@ export const PIECES = {
         size: {
             columns: 3,
             rows: 2
+        },
+        color: {
+            dark: '#00f000',
+            light: '#00bc00'
         }
     },
     'Z': {
@@ -45,6 +57,10 @@ export const PIECES = {
         size: {
             columns: 3,
             rows: 2
+        },
+        color: {
+            dark: '#f00000',
+            light: '#bc0000'
         }
     },
     'T': {
@@ -56,6 +72,10 @@ export const PIECES = {
         size: {
             columns: 3,
             rows: 2
+        },
+        color: {
+            dark: '#a000f0',
+            light: '#7b00bc'
         }
     },
     'O': {
@@ -67,6 +87,10 @@ export const PIECES = {
         size: {
             columns: 2,
             rows: 2
+        },
+        color: {
+            dark: '#f0f000',
+            light: '#bcb800'
         }
     },
     'I': {
@@ -80,6 +104,10 @@ export const PIECES = {
         size: {
             columns: 1,
             rows: 4
+        },
+        color: {
+            dark: '#00f0f0',
+            light: '#00bcbc'
         }
     }
 };
