@@ -1,4 +1,4 @@
-import { getRandomPiece, PIECES } from "./tetris-pieces";
+import { getRandomPiece, PIECES } from "./tetris-pieces.js";
 
 export const COLLIONS = {
     TOP: 'top',
