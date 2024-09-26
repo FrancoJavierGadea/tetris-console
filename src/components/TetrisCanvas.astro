@@ -1,4 +1,5 @@
 ---
+import music from "@assets/tetris.mp3";
 ---
 
 
@@ -6,12 +7,14 @@
 
     <slot></slot>
 
+    <audio src={music} loop style="display: none"></audio>
+
 </tetris-canvas>
 
 
 <script>
 
-    import { TetrisCanvas } from "../web-components/tetris/tetris-canvas.js";
+    import { TetrisCanvas } from "@tetris/components/tetris-canvas.js";
 
     customElements.define('tetris-canvas', TetrisCanvas);
 </script>

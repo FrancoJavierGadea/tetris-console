@@ -1,5 +1,6 @@
 ---
 import "../css/pieces-color.css";
+import music from "@assets/tetris.mp3";
 ---
 
 
@@ -9,12 +10,14 @@ import "../css/pieces-color.css";
 
     <slot></slot>
 
+    <audio src={music} loop style="display: none"></audio>
+
 </tetris-svg>
 
 
 <script>
 
-    import { TetrisSVG } from "../web-components/tetris/tetris-svg.js";
+    import { TetrisSVG } from "@tetris/components/tetris-svg.js";
 
     customElements.define('tetris-svg', TetrisSVG);
 </script>

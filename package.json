@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "tetris-console": "node src/web-components/tetris/tetris-console.js"
+    "tetris-console": "node src/tetris/console/tetris-console.js"
   },
   "dependencies": {
     "astro": "^4.15.6"

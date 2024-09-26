@@ -1,5 +1,5 @@
-import { Tetris } from "./tetris";
-import { PIECES } from "./tetris-pieces";
+import { Tetris } from "@tetris/tetris.js";
+import { PIECES } from "@tetris/tetris-pieces.js";
 
 
 
@@ -15,11 +15,13 @@ export class TetrisCanvas extends HTMLElement {
 
         const {
             rows = 20,
-            columns = 10
+            columns = 10,
+            linesColor = '#707070'
         } = params;
 
         this.rows = rows;
         this.columns = columns;
+        this.linesColor = linesColor;
 
         this.tetris = new Tetris({rows, columns});
 
@@ -31,6 +33,7 @@ export class TetrisCanvas extends HTMLElement {
             height: this.canvas?.height / this.rows
         };
 
+        this.audio = this.querySelector('audio');
 
         //MARK: Key events listeners 
         document.documentElement.addEventListener('keydown', (e) => {
@@ -71,6 +74,8 @@ export class TetrisCanvas extends HTMLElement {
         this.draw();
 
         this.play();
+
+        this.playAudio();
     }
 
     //MARK: Draw
@@ -87,21 +92,48 @@ export class TetrisCanvas extends HTMLElement {
 
         const {width, height} = this.pieceSize;
 
+        const piece = this.tetris.currentPiece;
+
+        this.#ctx.strokeStyle = '#000000';
+        this.#ctx.lineWidth = 1;
+
         for (let i = 0; i < this.rows; i++) {
             
             for (let j = 0; j < this.columns; j++) {
                 
-                let n = this.tetris.board[i][j];
+                const letter = (() => {
 
-                if(n !== 0){
+                    const {row, column} = piece.position;
 
-                    this.#ctx.fillStyle = PIECES[n].color.dark;
+                    const r = i - row;
+                    const c = j - column;
 
+                    const size = {
+                        rows: piece.array.length,
+                        columns: piece.array[0].length
+                    };
+
+                    //Draw the current piece
+                    if(r >= 0 && c >= 0 && r < size.rows && c < size.columns) {
+
+                        const letter = piece.array[r][c];
+                        
+                        if(letter !== 0) return letter;
+                    }
+
+                    return this.tetris.board[i][j];
+                })();
+
+                if(letter !== 0){
+
+                    this.#ctx.fillStyle = PIECES[letter].color.dark;
+                    
                     this.#ctx.beginPath();
 
                     this.#ctx.rect(width * j, height * i, width, height);
     
                     this.#ctx.fill();
+                    this.#ctx.stroke();
                 }
             }
             
@@ -113,7 +145,7 @@ export class TetrisCanvas extends HTMLElement {
 
         const {width, height} = this.pieceSize;
 
-        this.#ctx.strokeStyle = '#ffffff';
+        this.#ctx.strokeStyle = this.linesColor;
         this.#ctx.lineWidth = 0.5;
 
         for (let i = 1; i < this.rows; i++) {
@@ -135,6 +167,23 @@ export class TetrisCanvas extends HTMLElement {
         }
     }
 
+    //MARK: Audio
+    playAudio(){
+
+        this.audio.volume = 0.7;
+
+        const ID = setInterval(() => {
+
+            if(window.navigator.userActivation.hasBeenActive){
+
+                this.audio.play();
+                clearInterval(ID);
+            }
+
+            console.log(window.navigator.userActivation.hasBeenActive)
+
+        }, 2000);
+    }
 
     //MARK: Tetris game loop
     #animationID = null;

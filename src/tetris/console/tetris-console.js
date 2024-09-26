@@ -1,6 +1,7 @@
 import { exec, spawnSync } from "node:child_process";
 import path from "node:path";
-import { Tetris } from "./tetris.js";
+import { Tetris } from "../tetris.js";
+import { ServerLogger } from "./Server-logger.js";
 
 
 const KEYS = {
@@ -34,7 +35,14 @@ export class TetrisConsole {
         this.rows = rows;
         this.columns = columns;
 
-        this.tetris = new Tetris({rows, columns});
+        this.LOGS = new ServerLogger();
+
+        this.tetris = new Tetris({
+            rows, columns, 
+            logs: {
+                out: (...args) => this.LOGS.log(...args)
+            }
+        });
         
     }
 
@@ -51,6 +59,7 @@ export class TetrisConsole {
             if (key === '\u0003') { 
 
                 this.stopMusic();
+                this.LOGS.end();
                 process.exit();
             }
 
@@ -92,6 +101,8 @@ export class TetrisConsole {
     //MARK: Draw
     draw(){
 
+        const piece = this.tetris.currentPiece;
+
         let result = '';
 
         for (let i = 0; i < this.rows; i++) {
@@ -100,7 +111,28 @@ export class TetrisConsole {
 
             for (let j = 0; j < this.columns; j++) {
 
-                const letter = this.tetris.board[i][j];
+                const letter = (() => {
+
+                    const {row, column} = piece.position;
+
+                    const r = i - row;
+                    const c = j - column;
+
+                    const size = {
+                        rows: piece.array.length,
+                        columns: piece.array[0].length
+                    };
+
+                    //Draw the current piece
+                    if(r >= 0 && c >= 0 && r < size.rows && c < size.columns) {
+
+                        const letter = piece.array[r][c];
+                        
+                        if(letter !== 0) return letter;
+                    }
+
+                    return this.tetris.board[i][j];
+                })();
                 
                 if(letter !== 0){
                     
