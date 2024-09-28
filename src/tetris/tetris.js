@@ -2,23 +2,25 @@
 import { SPAWN_MODES, COLLISIONS } from "./tetris-constants.js";
 import { getPieceByName, getRandomPiece, PIECES, rotatePiece } from "./tetris-pieces.js";
 
-
+/**
+ * @class Tetris
+ */
 export class Tetris {
 
+    /**@type {(String | 0)[][]} */
     board = null;
 
-    /**
-     * @type {import("./tetris-pieces.js").TetrisPiece}
-     */
+    /**@type {import("./tetris-pieces.js").TetrisPiece} */
     currentPiece = null;
 
-    /**
-     * @type {import("./tetris-pieces.js").TetrisPiece}
-     */
+    /**@type {import("./tetris-pieces.js").TetrisPiece} */
     savedPiece = null;
 
+    /**
+     * @constructor
+     * @param {{rows:Number, columns:Number, spawnMode:String, logs:null | {out: (...args) => {}}}} params 
+     */
     constructor(params =  {}){
-
 
         const {
             rows = 20, 
@@ -27,20 +29,22 @@ export class Tetris {
             logs = {
                 out: (...args) => console.log(...args)
             }
-
         } = params;
 
-        this.logs = logs;
-
+        
         this.rows = rows;
         this.columns = columns;
-
-        this.spawnMode = spawnMode;
-
+        
         this.board = Array.from({length: rows}, () => {
-
+            
             return new Array(columns).fill(0);
         });
+        
+        /**@type {import("./tetris-constants.js").SPAWN_MODES} */
+        this.spawnMode = spawnMode;
+        
+        /**@type {null | {out: (...args) => {}}} */
+        this.logs = logs;
 
         this.gameStats = {
             completedRows: 0
@@ -50,13 +54,13 @@ export class Tetris {
 
     //MARK: Spawn piece
     /**
-     * Spawn new piece and set the **current piece** by **spawn mode**:
-     * 
-     * - `SPAWN_MODES.RANDOM`
-     * - `SPAWN_MODES.CENTER`
-     * - `SPAWN_MODES.RANDOM_ROTATE`
-     * 
-     * Reset the board when the previous current **piece** is high on the board
+     * Spawns a new piece and sets the **current piece** according to the specified **spawn mode**:
+     *
+     * - `SPAWN_MODES.RANDOM`: Spawns a piece at a random location.
+     * - `SPAWN_MODES.CENTER`: Spawns a piece in the center of the board.
+     * - `SPAWN_MODES.RANDOM_ROTATE`: Spawns a piece randomly and rotates it.
+     *
+     * Resets the board if the previous **current piece** is high on the board.
      */
     spawnPiece(pieceName){
 
@@ -93,9 +97,7 @@ export class Tetris {
     }
 
     //MARK: Put piece
-    /**
-     * Put the **current piece** on the board
-     */
+    /** Put the **current piece** on the board */
     putPiece(){
 
         const piece = this.currentPiece;
@@ -122,10 +124,7 @@ export class Tetris {
     //MARK: Save piece
     #hasSwapped = false;
 
-    /**
-     * Save the current piece, if not previous piece saved spawn new piece
-     * otherwise 
-     */
+    /** Saves the current piece. If no previous piece was saved, spawns a new piece */
     savePiece(){
 
         if(this.#hasSwapped) return;
@@ -154,11 +153,14 @@ export class Tetris {
 
     //MARK: Move Piece
     /**
-     * Move the **current piece** to left, right and bottom.
-     * Detect collisions beetwen Pieces and the board.
-     * Check clear rows and Spawn a new Piece when collision is BOTTOM
-     * 
-     * @param {{columns:Integer, rows:Integer}} params  
+     * Moves the **current piece** in the direction specified (LEFT, RIGHT, or BOTTOM)
+     * Detects collisions between the piece, the board and other pieces
+     * Clears full rows when detected
+     * Spawns a new piece when the collision is BOTTOM
+     *
+     * @param {Object} params - Movement parameters
+     * @param {number} params.columns - Number of columns to move (LEFT or RIGHT)
+     * @param {number} params.rows - Number of rows to move (BOTTOM)
      */
     movePiece({columns = 0, rows = 0}){
 
@@ -213,10 +215,7 @@ export class Tetris {
     }
 
     //MARK: Rotate piece
-    /**
-     * 
-     *  
-     */
+    /** Rotates the **current piece** 90 degrees clockwise */
     rotatePiece(){
 
         const piece = this.currentPiece;
@@ -291,6 +290,7 @@ export class Tetris {
         this.logs?.out('Reset board');
     }
 
+
     //MARK: Clear rows
     clearRows(){
 
@@ -300,6 +300,7 @@ export class Tetris {
 
             let flag = true;
 
+            //Checks if all cells in row are filled
             for (let j = 0; j < this.columns; j++){
 
                 if(this.board[i][j] === 0){
@@ -318,7 +319,7 @@ export class Tetris {
                     this.board[i][j] = 0;
                 }
 
-                // Mover las filas superiores hacia abajo
+                //Mover las filas superiores hacia abajo
                 for (let r = i; r > 0; r--) {
 
                     for (let j = 0; j < this.columns; j++) {
