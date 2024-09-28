@@ -5,7 +5,7 @@
  * @property {String} name - El nombre de la pieza: 'L', 'J', 'S', 'Z', 'T', 'I', 'O'
  * @property {(String | 0)[][]} array - La matriz que define la forma de la pieza, con letras o 0 para espacios vacíos
  * @property {{dark: String, light: String}} color - Los colores de la pieza, con tonos oscuro y claro
- * @property {{row: number, column: number}} [position] - La posición de la pieza en el tablero
+ * @property {{row: number, column: number}} position - La posición de la pieza en el tablero
  */
 
 
@@ -103,7 +103,9 @@ export const PIECES = {
     }
 };
 
-
+/**
+ * @returns {TetrisPiece} 
+ */
 export function getRandomPiece(){
 
     const pieces = Object.values(PIECES);
@@ -113,6 +115,11 @@ export function getRandomPiece(){
     return structuredClone(piece); 
 }
 
+
+/**
+ * @param {'T' | 'L' | 'J' | 'S' | 'Z' | 'O' | 'I'} name 
+ * @returns {TetrisPiece} 
+ */
 export function getPieceByName(name){
 
     if(['T', 'L', 'J', 'S', 'Z', 'O', 'I'].includes(name)){
@@ -126,8 +133,8 @@ export function getPieceByName(name){
 }
 
 /**
- * 
- * @param {TetrisPiece} piece 
+ * @param {TetrisPiece} piece
+ * @returns {TetrisPiece} 
  */
 export function rotatePiece(piece){
 
@@ -150,3 +157,4 @@ export function rotatePiece(piece){
 
     return clonePiece; 
 }
+

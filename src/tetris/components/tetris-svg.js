@@ -15,20 +15,12 @@ export class TetrisSVG extends HTMLElement {
     constructor(){
         super();
         
-        this.cell = {
-            attr: this.getAttribute('match-cell-attr'),
-            pattern: this.getAttribute('match-cell-pattern')
+        this.SVG_DATA = {
+            cellAttr: this.getAttribute('cell-attr'),
+            cellPattern: this.getAttribute('cell-pattern'),
+            boardClass: this.getAttribute('board-class'),
+            savedPieceClass: this.getAttribute('saved-piece-class')
         }
-        
-        //SVG element
-        this.$SVG = {
-            getCell: (r, c) => {
-                
-                const cellID = this.cell.pattern.replace('{row}', r).replace('{column}', c);
-
-                return this.querySelector(`svg g.Board [${this.cell.attr}="${cellID}"]`);
-            }
-        };
 
         this.audio = this.querySelector('audio');
 
@@ -58,14 +50,16 @@ export class TetrisSVG extends HTMLElement {
                 case 'Space':
                     this.tetris.movePieceToDown();
                     break;
+
+                case 'KeyC':
+                    this.tetris.savePiece();
+                    break;
             }
 
-            this.drawBoard();
+            this.draw();
         });
 
         this.initGame();
-
-        //window.pause = this.pause.bind(this);
     }
 
     //MARK: Init game
@@ -73,20 +67,40 @@ export class TetrisSVG extends HTMLElement {
 
         this.tetris.spawnPiece('T');
 
-        this.drawBoard();
+        this.draw();
 
         this.play(1000);
 
         this.playAudio();
     }
 
+    //MARK: Get Cell
+    getCell({row, column, element} = {}){
+
+        const {cellAttr, cellPattern} = this.SVG_DATA;
+
+        const cellID = cellPattern?.replace('{row}', row).replace('{column}', column);
+
+        return element.querySelector(`[${cellAttr}="${cellID}"]`);
+    }
+
 
     //MARK: Draw board
+    draw(){
+
+        this.drawBoard();
+        this.drawSavedPiece();
+    }
+
     drawBoard(){
 
         const piece = this.tetris.currentPiece;
 
         //Draw Board
+        const $BOARD = this.querySelector(`svg g.${this.SVG_DATA.boardClass}`);
+
+        if(!$BOARD) return;
+
         for (let i = 0; i < this.rows; i++) {
             
             for (let j = 0; j < this.columns; j++) {
@@ -115,13 +129,58 @@ export class TetrisSVG extends HTMLElement {
                 })();
             
                 //Get cell of SVG
-                const rect = this.$SVG.getCell(i + 1, j + 1);
+                const rect = this.getCell({
+                    row: i + 1, 
+                    column: j + 1, 
+                    element: $BOARD
+                });
 
                 rect.setAttribute('class', '');
 
                 if(letter !== 0){
 
                     rect.classList.toggle(`draw-${letter}`, true);
+                }
+            }
+        }
+    }
+
+    //MARK: Draw Saved piece
+    drawSavedPiece(){
+
+        const piece = this.tetris.savedPiece;
+
+        const $SAVED_PIECE = this.querySelector(`svg g.${this.SVG_DATA.savedPieceClass}`);
+
+        if(!piece || !$SAVED_PIECE) return;
+
+        $SAVED_PIECE.querySelectorAll('.painted').forEach(path => {
+
+            path.setAttribute('class', '');
+        });
+
+        const size = {
+            rows: this.tetris.savedPiece.array.length,
+            columns: this.tetris.savedPiece.array[0].length
+        }
+
+        for (let i = 0; i < size.rows; i++) {
+
+            for (let j = 0; j < size.columns; j++) {
+
+                const letter = this.tetris.savedPiece.array[i][j];
+
+                //Get cell of SVG
+                const rect = this.getCell({
+                    row: i + 1, 
+                    column: j + 1, 
+                    element: $SAVED_PIECE
+                });
+
+                if(letter !== 0){
+
+                    rect.classList.toggle(`draw-${letter}`, true);
+                    rect.classList.toggle('painted', true);
                 }
             }
         }
@@ -139,8 +198,6 @@ export class TetrisSVG extends HTMLElement {
                 this.audio.play();
                 clearInterval(ID);
             }
-
-            console.log(window.navigator.userActivation.hasBeenActive)
 
         }, 2000);
     }

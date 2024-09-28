@@ -84,6 +84,12 @@ export class TetrisConsole {
                 case KEYS.Space:
                     this.tetris.movePieceToDown();
                     break;
+
+
+                case 'c':
+                case 'C':
+                    this.tetris.savePiece();
+                    break;
             }
 
             this.draw();
@@ -103,7 +109,7 @@ export class TetrisConsole {
 
         const piece = this.tetris.currentPiece;
 
-        let result = '';
+        const rows = [];
 
         for (let i = 0; i < this.rows; i++) {
             
@@ -135,7 +141,7 @@ export class TetrisConsole {
                 })();
                 
                 if(letter !== 0){
-                    
+
                     row += PIECE_COLORS[letter]('[]');
                 }
                 else {
@@ -146,15 +152,47 @@ export class TetrisConsole {
             
             row += '!>';
             
-            result += `${row}\n`;
+            rows.push(row);
         }
         
-        result += `<!${'=='.repeat(this.columns)}!>\n`;
-        
+        //Draw Stats
+        rows[1] += `  Rows: ${this.tetris.gameStats.completedRows}`;
 
+        //draw saved pieces
+        if(this.tetris.savedPiece){
+
+            const size = {
+                rows: this.tetris.savedPiece.array.length,
+                columns: this.tetris.savedPiece.array[0].length
+            }
+
+            for (let i = 0; i < size.rows; i++) {
+            
+                let row = '  ';
+    
+                for (let j = 0; j < size.columns; j++) {
+
+                    const letter = this.tetris.savedPiece.array[i][j];
+
+                    if(letter !== 0){
+
+                        row += PIECE_COLORS[letter]('[]');
+                    }
+                    else {
+                        
+                        row += '  ';
+                    }
+                }
+
+                rows[i + 3] += row;
+            }
+        }
+
+        rows.push(`<!${'=='.repeat(this.columns)}!>\n`);
+        
         process.stdout.cursorTo(0, 0);
         process.stdout.clearScreenDown();
-        process.stdout.write(result, 'utf8');
+        process.stdout.write(rows.join('\n'), 'utf8');
 
         return;
     }

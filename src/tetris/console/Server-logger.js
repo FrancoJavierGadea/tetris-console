@@ -48,11 +48,11 @@ export class ServerLogger {
 
                 if(obj){
     
-                    response.write(`log: ${message} ${JSON.stringify(obj)}\n\n`);
+                    response.write(`data: ${message} ${JSON.stringify(obj)}\n\n`);
                 }
                 else {
 
-                    response.write(`log: ${message}\n\n`);
+                    response.write(`data: ${message}\n\n`);
                 }
             });
         }

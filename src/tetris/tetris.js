@@ -1,19 +1,7 @@
 
+import { SPAWN_MODES, COLLISIONS } from "./tetris-constants.js";
 import { getPieceByName, getRandomPiece, PIECES, rotatePiece } from "./tetris-pieces.js";
 
-export const COLLIONS = {
-    TOP: 'top',
-    LEFT: 'left',
-    RIGHT: 'right',
-    BOTTOM: 'bottom',
-    NONE: 'none'
-}
-
-export const SPAWN_MODES = {
-    RANDOM: 'random',
-    CENTER: 'center',
-    RANDOM_ROTATE: 'random_rotate'
-}
 
 export class Tetris {
 
@@ -24,13 +12,18 @@ export class Tetris {
      */
     currentPiece = null;
 
+    /**
+     * @type {import("./tetris-pieces.js").TetrisPiece}
+     */
+    savedPiece = null;
+
     constructor(params =  {}){
 
 
         const {
             rows = 20, 
             columns = 10,
-
+            spawnMode = SPAWN_MODES.RANDOM_ROTATE,
             logs = {
                 out: (...args) => console.log(...args)
             }
@@ -42,12 +35,16 @@ export class Tetris {
         this.rows = rows;
         this.columns = columns;
 
-        this.spawnMode = SPAWN_MODES.CENTER;
+        this.spawnMode = spawnMode;
 
         this.board = Array.from({length: rows}, () => {
 
             return new Array(columns).fill(0);
         });
+
+        this.gameStats = {
+            completedRows: 0
+        };
     }
 
 
@@ -65,11 +62,34 @@ export class Tetris {
 
         if(this.currentPiece?.position?.row <= 1) this.resetBoard();
 
-        const piece = pieceName ? getPieceByName(pieceName) : getRandomPiece();
+        let piece = pieceName ? getPieceByName(pieceName) : getRandomPiece();
         
+        const size = {
+            columns: piece.array[0].length
+        };
+
+        switch(this.spawnMode){
+            
+            case SPAWN_MODES.CENTER:
+                piece.position.column = Math.floor((this.columns / 2) - (size.columns / 2));
+                break
+
+            case SPAWN_MODES.RANDOM:
+            case SPAWN_MODES.RANDOM_ROTATE:
+                piece.position.column = Math.floor(Math.random() * (this.columns - size.columns + 1))
+                break;
+        }
+
+        if([SPAWN_MODES.RANDOM_ROTATE].includes(this.spawnMode)){
+
+            if(Math.random() > 0.5) piece = rotatePiece(piece);
+        }
+
         this.currentPiece = piece;
 
         this.logs?.out('Spawn piece:', {name: piece.name});
+
+        this.#hasSwapped = false;
     }
 
     //MARK: Put piece
@@ -99,6 +119,38 @@ export class Tetris {
         }
     }
 
+    //MARK: Save piece
+    #hasSwapped = false;
+
+    /**
+     * Save the current piece, if not previous piece saved spawn new piece
+     * otherwise 
+     */
+    savePiece(){
+
+        if(this.#hasSwapped) return;
+
+        if(this.savedPiece){
+
+            const aux = this.currentPiece;
+
+            this.currentPiece = this.savedPiece;
+
+            this.savedPiece = aux;
+        }
+        else {
+
+            this.savedPiece = this.currentPiece;
+
+            this.spawnPiece();
+        }
+        
+        //Reset position from saved piece
+        this.savedPiece.position.row = 0;
+        this.savedPiece.position.column = 0;
+
+        this.#hasSwapped = true;
+    }
 
     //MARK: Move Piece
     /**
@@ -117,7 +169,7 @@ export class Tetris {
 
         if(collision){
 
-            if(dir === COLLIONS.BOTTOM){
+            if(dir === COLLISIONS.BOTTOM){
 
                 //Put the current piece
                 this.putPiece();
@@ -200,20 +252,20 @@ export class Tetris {
                     const c = piece.position.column + columns + j;
 
                     //Check collisions with the board
-                    if(c < 0) return {collision:true, dir: COLLIONS.LEFT };
-                    if(c >= this.columns) return {collision:true, dir: COLLIONS.RIGHT };
-                    if(r >= this.rows) return {collision:true, dir: COLLIONS.BOTTOM };
+                    if(c < 0) return {collision:true, dir: COLLISIONS.LEFT };
+                    if(c >= this.columns) return {collision:true, dir: COLLISIONS.RIGHT };
+                    if(r >= this.rows) return {collision:true, dir: COLLISIONS.BOTTOM };
 
                     //Check collisions with other pieces
                     const boardLetter = this.board[r][c];
 
                     if(boardLetter !== 0){
 
-                        if(rows >= 1) return {collision:true, dir: COLLIONS.BOTTOM };
-                        if(columns < 0) return {collision:true, dir: COLLIONS.LEFT };
-                        if(columns > 0) return {collision:true, dir: COLLIONS.RIGHT };
+                        if(rows >= 1) return {collision:true, dir: COLLISIONS.BOTTOM };
+                        if(columns < 0) return {collision:true, dir: COLLISIONS.LEFT };
+                        if(columns > 0) return {collision:true, dir: COLLISIONS.RIGHT };
 
-                        return {collision: true, dir: COLLIONS.NONE};
+                        return {collision: true, dir: COLLISIONS.NONE};
                     }
 
                       
@@ -221,7 +273,7 @@ export class Tetris {
             }  
         }
 
-        return {collision: false, dir: COLLIONS.NONE};
+        return {collision: false, dir: COLLISIONS.NONE};
     }
 
 
@@ -290,6 +342,7 @@ export class Tetris {
         if(rowCounter > 0){
 
             this.logs?.out(`Clear rows: ${rowCounter}`);
+            this.gameStats.completedRows += rowCounter;
         } 
     }
 

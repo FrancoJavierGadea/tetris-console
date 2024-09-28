@@ -6,7 +6,12 @@ import music from "@assets/tetris.mp3";
 
 
 
-<tetris-svg match-cell-attr="inkscape\\:label" match-cell-pattern="C-{row}-{column}">
+<tetris-svg 
+    cell-attr="inkscape\\:label" 
+    cell-pattern="C-{row}-{column}"
+    board-class="Board"
+    saved-piece-class="Saved-piece"
+>
 
     <slot></slot>
 
