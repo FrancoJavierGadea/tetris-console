@@ -1,0 +1,8 @@
+{
+    "typeAcquisition": {
+        "include": ["node"]
+    },
+    "compilerOptions": {
+        "module": "ES2022"
+    }
+}

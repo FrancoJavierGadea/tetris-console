@@ -2,6 +2,7 @@ import { exec, spawnSync } from "node:child_process";
 import path from "node:path";
 import { Tetris } from "./tetris.js";
 import { ServerLogger } from "../utils/Server-logger.js";
+import { PlayWithPowershell } from "../utils/PlayWithPowershell.js";
 
 
 const KEYS = {
@@ -43,6 +44,10 @@ export class TetrisConsole {
             }
         });
         
+        //Music
+        const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+
+        this.music = new PlayWithPowershell({source: themePath});
     }
 
     //MARK: Init
@@ -57,7 +62,8 @@ export class TetrisConsole {
             // Si presionas Ctrl+C, se sale del programa
             if (key === '\u0003') { 
 
-                this.stopMusic();
+                this.music.stop();
+                
                 this.LOGS.end();
                 process.exit();
             }
@@ -96,7 +102,7 @@ export class TetrisConsole {
             return;
         });
 
-        this.playMusic();
+        this.music.play();
 
         this.tetris.spawnPiece();
         this.draw();
@@ -197,31 +203,6 @@ export class TetrisConsole {
     }
 
     
-    //MARK: Play music
-    #musicProcess = null;
-
-    playMusic(){
-
-        const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
-
-        const ps = `powershell -c while($true){(New-Object Media.SoundPlayer "${themePath}").PlaySync();}`;
-
-        this.#musicProcess = exec(ps, (err, out) => {
-
-            //console.log(err, out);
-        });
-    }
-
-    //MARK: Stop music
-    stopMusic(){
-
-        if(this.#musicProcess){
-
-            spawnSync("taskkill", ["/pid", this.#musicProcess.pid, '/f', '/t']);
-        }
-    }
-
-
     //MARK: Play Game loop
     #intervalID = null;
 
