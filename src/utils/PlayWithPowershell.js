@@ -9,26 +9,29 @@ export class PlayWithPowershell {
     constructor(params = {}){
 
         const {
-            source
+            source,
+            volume = 0.2
         } = params;
 
         this.source = source;
+        this.volume = volume;
     }
 
     play(){
-        const cmd = `powershell -c while($true){(New-Object Media.SoundPlayer "${this.source}").PlaySync();}`;
+        const file = path.join(import.meta.dirname, './play-with-powershell.ps1');
 
-        this.#processRef = exec(cmd, (err, out) => {
-
-            console.log(err, out);
-        });
+        this.#processRef = spawn('powershell', [
+            file, 
+            '-source', this.source,
+            '-volume', this.volume
+        ]);
     }
 
     stop(){
 
         if(this.#processRef){
 
-            spawnSync("taskkill", ["/pid", this.#processRef.pid, '/f', '/t']);
+            this.#processRef.kill();
 
             this.#processRef = null;
         }
@@ -37,14 +40,14 @@ export class PlayWithPowershell {
 
 
 //MARK: Test
-// const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
 
-// const music = new PlayWithPowershell({source: themePath});
+const music = new PlayWithPowershell({source: themePath});
 
-// music.play()
+music.play()
 
-// setTimeout(() => {
+setTimeout(() => {
 
-//     music.stop();
+    music.stop();
 
-// }, 7000);
+}, 7000);
