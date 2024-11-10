@@ -16,12 +16,7 @@ export class PlayWithAplay {
     }
 
     play(){
-        const cmd = `aplay -q "${this.source}"`;
-
-        this.#processRef = exec(cmd, (err, out) => {
-
-            console.log(err, out);
-        });
+        this.#processRef = spawn('aplay', ['-q', this.source]);
     }
 
     stop(){
@@ -30,7 +25,7 @@ export class PlayWithAplay {
 
             console.log('STOP');
 
-            this.#processRef.kill('SIGKILL');
+            this.#processRef.kill();
 
             this.#processRef = null;
         }
