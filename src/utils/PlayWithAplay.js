@@ -34,14 +34,14 @@ export class PlayWithAplay {
 
 
 //MARK: Test
-const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+// const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
 
-const music = new PlayWithAplay({source: themePath});
+// const music = new PlayWithAplay({source: themePath});
 
-music.play()
+// music.play()
 
-setTimeout(() => {
+// setTimeout(() => {
 
-    music.stop();
+//     music.stop();
 
-}, 7000);
+// }, 7000);

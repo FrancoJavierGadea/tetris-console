@@ -40,14 +40,14 @@ export class PlayWithPowershell {
 
 
 //MARK: Test
-const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+// const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
 
-const music = new PlayWithPowershell({source: themePath});
+// const music = new PlayWithPowershell({source: themePath});
 
-music.play()
+// music.play()
 
-setTimeout(() => {
+// setTimeout(() => {
 
-    music.stop();
+//     music.stop();
 
-}, 7000);
+// }, 7000);

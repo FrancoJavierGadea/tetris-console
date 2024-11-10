@@ -2,7 +2,7 @@ import { exec, spawnSync } from "node:child_process";
 import path from "node:path";
 import { Tetris } from "./tetris.js";
 import { ServerLogger } from "../utils/Server-logger.js";
-import { PlayWithPowershell } from "../utils/PlayWithPowershell.js";
+import { getPlayerSound } from "../utils/PlayerSound.js";
 
 
 const KEYS = {
@@ -47,7 +47,7 @@ export class TetrisConsole {
         //Music
         const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
 
-        this.music = new PlayWithPowershell({source: themePath});
+        this.music = getPlayerSound({source: themePath});
     }
 
     //MARK: Init
@@ -63,7 +63,7 @@ export class TetrisConsole {
             if (key === '\u0003') { 
 
                 this.music.stop();
-                
+
                 this.LOGS.end();
                 process.exit();
             }
