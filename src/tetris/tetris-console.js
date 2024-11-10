@@ -1,7 +1,7 @@
 import { exec, spawnSync } from "node:child_process";
 import path from "node:path";
-import { Tetris } from "../tetris.js";
-import { ServerLogger } from "./Server-logger.js";
+import { Tetris } from "./tetris.js";
+import { ServerLogger } from "../utils/Server-logger.js";
 
 
 const KEYS = {
@@ -23,7 +23,6 @@ const PIECE_COLORS = {
 };
 
 export class TetrisConsole {
-
 
     constructor(params = {}){
 
@@ -203,7 +202,7 @@ export class TetrisConsole {
 
     playMusic(){
 
-        const themePath = path.join(import.meta.dirname, '../../assets/tetris.wav');
+        const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
 
         const ps = `powershell -c while($true){(New-Object Media.SoundPlayer "${themePath}").PlaySync();}`;
 
@@ -247,7 +246,3 @@ export class TetrisConsole {
         }
     }
 }
-
-const tetris = new TetrisConsole();
-
-tetris.init();
