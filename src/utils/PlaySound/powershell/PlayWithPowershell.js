@@ -10,7 +10,7 @@ export class PlayWithPowershell {
 
         const {
             source,
-            volume = 0.2
+            volume = 0.5
         } = params;
 
         this.source = source;

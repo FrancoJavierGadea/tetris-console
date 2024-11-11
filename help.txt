@@ -1,0 +1,18 @@
+Tetris Console Game - Command Line Help
+
+Usage:
+  tetris-console [options]
+
+Options:
+  --version, -v          Display the current version of Tetris Console Game.
+  --help, -h             Show this help information.
+  --volume <value>, -V <value>
+                         Set the volume level for the game sound. Accepts a value between 0.0 (mute) and 1.0 (full volume).
+
+Examples:
+  tetris-console --version       Display the current version.
+  tetris-console -h              Show help information.
+  tetris-console --volume 0.5    Start the game with volume set to 50%.
+  tetris-console -V 0.8          Start the game with volume set to 80%.
+
+For more information, visit: https://github.com/FrancoJavierGadea/tetris-console
