@@ -2,7 +2,7 @@ import { exec, spawnSync } from "node:child_process";
 import path from "node:path";
 import { Tetris } from "./tetris.js";
 import { ServerLogger } from "../utils/Server-logger.js";
-import { getPlayerSound } from "../utils/PlayerSound.js";
+import { getPlayerSound } from "../utils/PlaySound/PlayerSound.js";
 
 
 const KEYS = {

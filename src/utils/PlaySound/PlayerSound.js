@@ -1,6 +1,6 @@
 import os from "node:os";
-import { PlayWithPowershell } from "./PlayWithPowershell.js";
-import { PlayWithAplay } from "./PlayWithAplay.js";
+import { PlayWithPowershell } from "./powershell/PlayWithPowershell.js";
+import { PlayWithAplay } from "./linux/PlayWithAplay.js";
 
 export function getPlayerSound(params){
 

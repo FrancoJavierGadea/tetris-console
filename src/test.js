@@ -1,4 +1,5 @@
 import { TetrisConsole } from "./tetris/tetris-console.js";
 
+const tetris = new TetrisConsole();
 
-export default TetrisConsole;
+tetris.init();
