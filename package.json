@@ -1,7 +1,15 @@
 {
-  "name": "Tetris console",
+  "name": "tetris-console",
   "type": "module",
   "version": "0.0.1",
+  "description": "Play tetris in the console and fun",
+  "keywords": ["tetris", "console game"],
+  "author": "1812",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FrancoJavierGadea/tetris-console"
+  },
   "scripts": {
     "start": "node src/index.js"
   },
