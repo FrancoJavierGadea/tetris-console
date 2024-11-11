@@ -4,7 +4,11 @@
   "version": "0.0.1",
   "description": "Play tetris in the console and fun",
   "keywords": ["tetris", "console game"],
-  "author": "1812",
+  "author": {
+    "name": "Franco Javier Gadea",
+    "email": "francojaviergadea@gmail.com",
+    "url": "https://francojaviergadea.github.io/"
+  },
   "license": "MIT",
   "main": "src/index.js",
   "repository": {
@@ -13,6 +17,9 @@
   },
   "scripts": {
     "test": "node src/test.js"
+  },
+  "bin": {
+    "tetris-console": "./bin/tetris-console.js"
   },
   "dependencies": {}
 }
