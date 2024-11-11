@@ -21,10 +21,19 @@ export class PlayWithPowershell {
         const file = path.join(import.meta.dirname, './play-with-powershell.ps1');
 
         this.#processRef = spawn('powershell', [
-            file, 
+            '-File', file, 
             '-source', this.source,
-            '-volume', this.volume
+            '-volume', this.volume.toString()
         ]);
+
+        this.#processRef.stdout.on('data', (data) => {
+
+            //console.log(data.toString());
+        });
+        
+        const cmd = this.#processRef.spawnargs.join(' ');
+
+        //console.log(cmd);
     }
 
     stop(){
@@ -40,14 +49,21 @@ export class PlayWithPowershell {
 
 
 //MARK: Test
-// const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+export function test(){
 
-// const music = new PlayWithPowershell({source: themePath});
+    console.log('Test play sound with powershell');
 
-// music.play()
+    const themePath = path.join(import.meta.dirname, '../../../assets/tetris.wav');
 
-// setTimeout(() => {
-
-//     music.stop();
-
-// }, 7000);
+    console.log(`\nFile: ${themePath}`);
+    
+    const music = new PlayWithPowershell({source: themePath});
+    
+    music.play()
+    
+    setTimeout(() => {
+    
+        music.stop();
+    
+    }, 7000);
+}

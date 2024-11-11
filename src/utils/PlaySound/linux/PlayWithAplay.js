@@ -16,7 +16,17 @@ export class PlayWithAplay {
     }
 
     play(){
+
         this.#processRef = spawn('aplay', ['-q', this.source]);
+
+        this.#processRef.stdout.on('data', (data) => {
+
+            //console.log(data.toString());
+        });
+        
+        const cmd = this.#processRef.spawnargs.join(' ');
+
+        //console.log(cmd);
     }
 
     stop(){
@@ -34,14 +44,17 @@ export class PlayWithAplay {
 
 
 //MARK: Test
-// const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+export function test(){
 
-// const music = new PlayWithAplay({source: themePath});
-
-// music.play()
-
-// setTimeout(() => {
-
-//     music.stop();
-
-// }, 7000);
+    const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+    
+    const music = new PlayWithAplay({source: themePath});
+    
+    music.play()
+    
+    setTimeout(() => {
+    
+        music.stop();
+    
+    }, 7000);
+}

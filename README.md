@@ -11,6 +11,12 @@ npm install --save-dev https://github.com/FrancoJavierGadea/tetris-console.git
 npm i -D https://github.com/FrancoJavierGadea/tetris-console.git
 ```
 
+Remove with:
+
+```sh
+npm uninstall tetris-console
+```
+
 <br>
 
 ### Run
