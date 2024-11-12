@@ -1,8 +1,7 @@
-import { exec, spawnSync } from "node:child_process";
 import path from "node:path";
 import { Tetris } from "./tetris.js";
 import { ServerLogger } from "../utils/Server-logger.js";
-import { getPlayerSound } from "../utils/PlaySound/PlayerSound.js";
+import { getDefaultPlayerSound, getPlayerSound } from "../utils/PlaySound/PlayerSound.js";
 
 
 const KEYS = {
@@ -25,15 +24,20 @@ const PIECE_COLORS = {
 
 export class TetrisConsole {
 
+    #soundPlayer = null;
+
     constructor(params = {}){
 
         const {
             rows = 20,
-            columns = 10
+            columns = 10,
+            music = {}
         } = params;
 
         this.rows = rows;
         this.columns = columns;
+
+        this.music = music;
 
         this.LOGS = new ServerLogger();
 
@@ -45,9 +49,14 @@ export class TetrisConsole {
         });
         
         //Music
-        const themePath = path.join(import.meta.dirname, '../assets/tetris.wav');
+        const source = path.join(import.meta.dirname, '../assets/tetris.wav');
+        const volume = this.music.volume;
 
-        this.music = getPlayerSound({source: themePath});
+        this.#soundPlayer = this.music.player ? 
+            getPlayerSound(this.music.player, {source, volume})
+            :
+            getDefaultPlayerSound({source, volume})
+        ;
     }
 
     //MARK: Init
@@ -62,7 +71,7 @@ export class TetrisConsole {
             // Si presionas Ctrl+C, se sale del programa
             if (key === '\u0003') { 
 
-                this.music.stop();
+                this.#soundPlayer.stop();
 
                 this.LOGS.end();
                 process.exit();
@@ -102,7 +111,7 @@ export class TetrisConsole {
             return;
         });
 
-        this.music.play();
+        this.#soundPlayer.play();
 
         this.tetris.spawnPiece();
         this.draw();

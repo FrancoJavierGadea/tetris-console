@@ -18,22 +18,23 @@ $sound = New-Object System.Windows.Media.MediaPlayer;
 
 $sound.Open([uri] $source);
 
+$duration = $null;
+
+do {
+    $duration = $sound.NaturalDuration.TimeSpan.TotalMilliseconds;
+}
+until($duration);
+
+Write-Host "Duration $duration";
+
 $sound.Volume = $volume;
 
-# Evento para reiniciar la reproducción cuando termine
-$sound.Add_MediaEnded({
 
-    # Reinicia la posición al inicio
-    $sound.Position = [TimeSpan]::Zero;
-
-    $sound.Play();
-})
-
-$sound.Play();
-
-Write-Host "Reproduciendo en bucle... Presiona Ctrl+C para detener."
+Write-Host "Reproduciendo en bucle... Presiona Ctrl + C para detener.";
 
 while ($true) {
-
-    Start-Sleep -Seconds 1;
+    
+    $sound.Position = [TimeSpan]::Zero;
+    $sound.Play();
+    Start-Sleep -Milliseconds $duration;
 }

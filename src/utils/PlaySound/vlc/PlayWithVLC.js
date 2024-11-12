@@ -1,23 +1,30 @@
-import { exec, spawn, spawnSync } from "node:child_process";
+import { spawn, } from "node:child_process";
 import path from "node:path";
 
 
-export class PlayWithAplay {
+export class PlayWithVLC {
 
     #processRef = null;
 
     constructor(params = {}){
 
         const {
-            source
+            source,
+            volume = 0.5
         } = params;
 
         this.source = source;
+        this.volume = volume;
     }
 
     play(){
 
-        this.#processRef = spawn('aplay', ['-q', this.source]);
+        this.#processRef = spawn('vlc', [
+            '--intf', 'dummy', 
+            '--no-volume-save', '--mmdevice-volume', this.volume,
+            '--repeat', 
+            this.source
+        ]);
 
         this.#processRef.stdout.on('data', (data) => {
 
@@ -46,7 +53,7 @@ export function test(){
 
     const themePath = path.join(import.meta.dirname, '../../../assets/tetris.wav');
     
-    const music = new PlayWithAplay({source: themePath});
+    const music = new PlayWithVLC({source: themePath});
     
     music.play()
     
@@ -56,3 +63,5 @@ export function test(){
     
     }, 7000);
 }
+
+//test();
