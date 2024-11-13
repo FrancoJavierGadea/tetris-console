@@ -3,6 +3,16 @@ import { Tetris } from "./tetris.js";
 import { ServerLogger } from "../utils/Server-logger.js";
 import { getDefaultPlayerSound, getPlayerSound } from "../utils/PlaySound/PlayerSound.js";
 
+/**
+ * @typedef {Object} TetrisConsoleParams
+ *  @property {number} rows Number of rows for the Tetris board, default `20`
+ *  @property {number} columns Number of columns for the Tetris board, default `10`
+ *  @property {string} player Audio player: `'vlc'`, `'powershell'`, `'afplay'`, `'aplay'`
+ *  @property {number} volume Volume for the song, between 0 (mute) and 1 (full volume). Default: `0.5`
+ *  @property {string} source Path to the song file. Supports `.mp3` for all players except `aplay`, which only supports `.wav`. Default: `'../assets/tetris.wav'`
+ */
+
+
 
 const KEYS = {
     ArrowDown: '\u001b[B',
@@ -26,18 +36,26 @@ export class TetrisConsole {
 
     #soundPlayer = null;
 
+    /**
+     * @constructor
+     * @param {TetrisConsoleParams} params 
+     */
     constructor(params = {}){
 
         const {
             rows = 20,
             columns = 10,
-            music = {}
+            player,
+            volume,
+            source = path.join(import.meta.dirname, '../assets/tetris.wav'),
         } = params;
 
         this.rows = rows;
         this.columns = columns;
 
-        this.music = music;
+        this.player = player;
+        this.volume = volume;
+
 
         this.LOGS = new ServerLogger();
 
@@ -49,11 +67,8 @@ export class TetrisConsole {
         });
         
         //Music
-        const source = path.join(import.meta.dirname, '../assets/tetris.wav');
-        const volume = this.music.volume;
-
-        this.#soundPlayer = this.music.player ? 
-            getPlayerSound(this.music.player, {source, volume})
+        this.#soundPlayer = this.player ? 
+            getPlayerSound(this.player, {source, volume})
             :
             getDefaultPlayerSound({source, volume})
         ;

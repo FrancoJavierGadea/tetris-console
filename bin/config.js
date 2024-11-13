@@ -15,6 +15,26 @@ const CONFIG = [
         alias: '-V',
         type: 'number'
     },
+    {
+        name: '--player',
+        alias: '-p',
+        type: 'string'
+    },
+    {
+        name: '--rows',
+        alias: '-r',
+        type: 'number'
+    },
+    {
+        name: '--columns',
+        alias: '-c',
+        type: 'number'
+    },
+    {
+        name: '--source',
+        alias: '-s',
+        type: 'string'
+    },
 ];
 
 
@@ -49,6 +69,11 @@ export function getConfig(){
             if(type === 'number'){
     
                 acc[name] = args.at(index + 1) && Number(args.at(index + 1));
+            }
+
+            if(type === 'string'){
+
+                acc[name] = args.at(index + 1);
             }
         }
     

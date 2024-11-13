@@ -5,14 +5,35 @@ Usage:
 
 Options:
   --version, -v          Display the current version of Tetris Console Game.
+
   --help, -h             Show this help information.
+
+  --rows <number>, -r <number>
+                         Set the number of rows for the Tetris board, default: 20.
+
+  --columns <number>, -c <number>
+                         Set the number of columns for the Tetris board, default: 10.
+
+  --player <program>     Specify the program to play the game music. Options are 'vlc', 'powershell', 'aplay', 'afplay'.
+  
   --volume <value>, -V <value>
-                         Set the volume level for the game sound. Accepts a value between 0.0 (mute) and 1.0 (full volume).
+                         Set the volume level for the game sound. Accepts a value between 0.0 (mute) and 1.0 (full volume). 
+                         Note: The `--volume` option is not supported by `aplay` on linux.
+
+  --source <path>, -s <path>
+                         Use a different song by specifying the path to the audio file. 
+                         Note: `.mp3` files work with all players except `aplay`, which only supports `.wav` files.
 
 Examples:
   tetris-console --version       Display the current version.
   tetris-console -h              Show help information.
+  tetris-console --player vlc    Use VLC as the audio player.
   tetris-console --volume 0.5    Start the game with volume set to 50%.
-  tetris-console -V 0.8          Start the game with volume set to 80%.
+  tetris-console -r 20 -c 10 -V 0.8
+                                 Start the game with a 20x10 board and volume set to 80%.
+   tetris-console --source "path/to/song.mp3"
+                                     Use a custom song located at the specified path.
+  tetris-console -r 20 -c 10 -V 0.8 -s "path/to/song.wav"
+                                     Start the game with a 20x10 board, volume at 80%, and use the specified `.wav` file.
 
 For more information, visit: https://github.com/FrancoJavierGadea/tetris-console

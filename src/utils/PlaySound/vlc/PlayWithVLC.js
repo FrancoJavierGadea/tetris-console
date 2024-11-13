@@ -20,7 +20,7 @@ export class PlayWithVLC {
     play(){
 
         this.#processRef = spawn('vlc', [
-            '--intf', 'dummy', 
+            //'--intf', 'dummy', 
             '--no-volume-save', '--mmdevice-volume', this.volume,
             '--repeat', 
             this.source

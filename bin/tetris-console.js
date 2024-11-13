@@ -24,7 +24,13 @@ switch (true) {
 
 
 //MARK: Run the game
-const tetris = new TetrisConsole();
+const tetris = new TetrisConsole({
+    volume: config['--volume'],
+    player: config['--player'],
+    rows: config['--rows'],
+    columns: config['--columns'],
+    source: config['--source']
+});
 
 tetris.init();
 
