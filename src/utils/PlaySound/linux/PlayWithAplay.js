@@ -15,13 +15,19 @@ export class PlayWithAplay {
         this.source = source;
     }
 
+    #aplayProcessID = null;
+
     play(){
 
-        this.#processRef = spawn('aplay', ['-q', this.source]);
+        const file = path.join(import.meta.dirname, './play-with-aplay.sh');
+
+        this.#processRef = spawn(file, ['--source', this.source]);
 
         this.#processRef.stdout.on('data', (data) => {
 
-            //console.log(data.toString());
+            this.#aplayProcessID = Number(data.toString());
+
+            //console.log(this.#aplayProcessID);
         });
         
         const cmd = this.#processRef.spawnargs.join(' ');
@@ -33,9 +39,21 @@ export class PlayWithAplay {
 
         if(this.#processRef){
 
+            //console.log('STOP');
+
+            //Kill bash script process
             this.#processRef.kill();
 
             this.#processRef = null;
+
+            //Kill aplay process
+            if(this.#aplayProcessID){
+
+                process.kill(this.#aplayProcessID);
+
+                this.#aplayProcessID = null;
+            };
+
         }
     }
 }
@@ -54,5 +72,7 @@ export function test(){
     
         music.stop();
     
-    }, 7000);
+    }, 10*60*1000);
 }
+
+//test();
