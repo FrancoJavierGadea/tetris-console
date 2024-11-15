@@ -141,6 +141,8 @@ export class Tetris {
 
             this.savedPiece = this.currentPiece;
 
+            this.currentPiece = null;
+
             this.spawnPiece();
         }
         

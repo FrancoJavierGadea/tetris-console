@@ -7,7 +7,7 @@ import { getHelp, getVersion } from "./utils.js";
 
 const config = getConfig();
 
-//console.log(config);
+console.log(config);
 
 switch (true) {
 

@@ -21,7 +21,8 @@ Options:
                          Note: The `--volume` option is not supported by `aplay` on linux.
 
   --source <path>, -s <path>
-                         Use a different song by specifying the path to the audio file. 
+                         Use a different song by specifying the path to the audio file.
+                         You can also use predefined values such as `#tetris`, `#tetris-classic` or `#tetrio-best-theme` for songs included in the `assets` folder 
                          Note: `.mp3` files work with all players except `aplay`, which only supports `.wav` files.
 
 Examples:
@@ -31,9 +32,13 @@ Examples:
   tetris-console --volume 0.5    Start the game with volume set to 50%.
   tetris-console -r 20 -c 10 -V 0.8
                                  Start the game with a 20x10 board and volume set to 80%.
-   tetris-console --source "path/to/song.mp3"
-                                     Use a custom song located at the specified path.
+
+  tetris-console --source "path/to/song.mp3"
+                                 Use a custom song located at the specified path.
+
   tetris-console -r 20 -c 10 -V 0.8 -s "path/to/song.wav"
-                                     Start the game with a 20x10 board, volume at 80%, and use the specified `.wav` file.
+                                 Start the game with a 20x10 board, volume at 80%, and use the specified `.wav` file.
+
+  tetris-console --source "#tetrio-best-theme" --player vlc --volume 1
 
 For more information, visit: https://github.com/FrancoJavierGadea/tetris-console

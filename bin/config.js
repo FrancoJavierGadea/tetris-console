@@ -1,3 +1,5 @@
+import path from "node:path";
+import fs from "node:fs";
 
 const CONFIG = [
     {
@@ -33,7 +35,7 @@ const CONFIG = [
     {
         name: '--source',
         alias: '-s',
-        type: 'string'
+        type: 'path'
     },
 ];
 
@@ -74,6 +76,26 @@ export function getConfig(){
             if(type === 'string'){
 
                 acc[name] = args.at(index + 1);
+            }
+
+            if(type === 'path'){
+
+                let value = args.at(index + 1);
+
+                if(value?.startsWith('#')){
+
+                    acc[name] = path.join(import.meta.dirname, '../src/assets/', `${value.slice(1)}.wav`);
+                }
+                else {
+
+                    acc[name] = path.isAbsolute(value) ? value : path.join(process.cwd(), value);
+                }
+
+                if(!fs.existsSync(acc[name])){
+
+                    console.log(`The path ${acc[name]} not exists`);
+                    process.exit(1);
+                }
             }
         }
     

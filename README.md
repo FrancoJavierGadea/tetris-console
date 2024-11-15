@@ -141,4 +141,16 @@ tetris.init();
 
 <br>
 
-**Best piano Tetris cover** here: [Tetris Theme (Korobeiniki) - Sonya Belousova](https://www.youtube.com/watch?v=q8rcTvAoRzk)
+### Songs
+
+- `source = "#tetris"`
+
+    **The Best piano Tetris cover**: [Tetris Theme (Korobeiniki) - Sonya Belousova](https://www.youtube.com/watch?v=q8rcTvAoRzk)
+
+- `source = "#tetrio-best-theme"`
+
+    The **best theme from [Tetr.io](https://tetr.io/)**: [Ultra Super Heroes, Kamoking - Battle BGM](https://www.youtube.com/watch?v=hhQcoxDMMs0)
+
+- `source = "#tetris-classic"`
+
+    **Classic tetris theme**: [Original Tetris theme (Tetris Soundtrack)](https://www.youtube.com/watch?v=NmCCQxVBfyM)
