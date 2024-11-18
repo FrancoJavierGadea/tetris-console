@@ -2,7 +2,40 @@
 
 Welcome to Tetris Console Game! Play the classic Tetris directly in your terminal.
 
-### Controls
+## Global Installation
+
+To install the game globally on your system, run:
+
+```sh
+npm install --global https://github.com/FrancoJavierGadea/tetris-console.git
+```
+```sh
+npm i -g https://github.com/FrancoJavierGadea/tetris-console.git
+```
+
+#### Try with `npx`
+
+```sh
+npx https://github.com/FrancoJavierGadea/tetris-console.git tetris-console
+```
+
+### Run the Game
+
+Once installed, start the game with:
+
+```sh
+tetris-console
+```
+
+> If you want to uninstall the game:
+> 
+> ```sh
+> npm uninstall tetris-console
+> ```
+
+<br>
+
+## Controls
 
 - `Arrow Left`: Move the piece left.
 - `Arrow Right`: Move the piece right.
@@ -12,7 +45,7 @@ Welcome to Tetris Console Game! Play the classic Tetris directly in your termina
 - `Space`: Drop the piece instantly to the bottom.
 - `Ctrl + C`: Quit the game.
 
-### Command-Line Options
+## Command-Line Options
 
 - `--version`, `-v`
 
@@ -58,40 +91,6 @@ Welcome to Tetris Console Game! Play the classic Tetris directly in your termina
 
 <br>
 
-## Try with `npx`
-
-```sh
-npx https://github.com/FrancoJavierGadea/tetris-console.git tetris-console
-```
-
-<br>
-
-## Global Installation
-
-To install the game globally on your system, run:
-
-```sh
-npm install --global https://github.com/FrancoJavierGadea/tetris-console.git
-```
-```sh
-npm i -g https://github.com/FrancoJavierGadea/tetris-console.git
-```
-
-### Run the Game
-
-Once installed, start the game with:
-
-```sh
-tetris-console
-```
-
-> If you want to uninstall the game:
-> 
-> ```sh
-> npm uninstall tetris-console
-> ```
-
-<br>
 
 ## Install in a project
 
