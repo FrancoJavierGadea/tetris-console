@@ -2,6 +2,7 @@ import path from "node:path";
 import { Tetris } from "./tetris.js";
 import { ServerLogger } from "../utils/Server-logger.js";
 import { getDefaultPlayerSound, getPlayerSound } from "../utils/PlaySound/PlayerSound.js";
+import { CLASSIC, MODERN } from "./tetris-console-themes.js";
 
 /**
  * @typedef {Object} TetrisConsoleParams
@@ -10,6 +11,7 @@ import { getDefaultPlayerSound, getPlayerSound } from "../utils/PlaySound/Player
  *  @property {string} player Audio player: `'vlc'`, `'powershell'`, `'afplay'`, `'aplay'`
  *  @property {number} volume Volume for the song, between 0 (mute) and 1 (full volume). Default: `0.5`
  *  @property {string} source Path to the song file. Supports `.mp3` for all players except `aplay`, which only supports `.wav`. Default: `'../assets/tetris.wav'`
+ *  @property {import("./tetris-console-themes.js").TetrisConsoleTheme} theme Theme configuration for the Tetris game, defining the characters used for filled and empty cells, border styling and color codes for each piece, default `CLASSIC`
  */
 
 
@@ -22,15 +24,13 @@ const KEYS = {
     Space: ' '
 }
 
-const PIECE_COLORS = {
-    'T': (text) => `\x1b[35m${text}\x1b[0m`,
-    'L': (text) => `\x1b[37m${text}\x1b[0m`,
-    'J': (text) => `\x1b[34m${text}\x1b[0m`,
-    'I': (text) => `\x1b[36m${text}\x1b[0m`,
-    'S': (text) => `\x1b[32m${text}\x1b[0m`,
-    'Z': (text) => `\x1b[31m${text}\x1b[0m`,
-    'O': (text) => `\x1b[33m${text}\x1b[0m`
-};
+function applyANSI(text, styles = []){
+
+    if(styles.length === 0) return text;
+
+    return `\x1b[${styles.join(';')}m${text}\x1b[0m`
+}
+
 
 export class TetrisConsole {
 
@@ -48,6 +48,7 @@ export class TetrisConsole {
             player,
             volume,
             source = path.join(import.meta.dirname, '../assets/tetris.wav'),
+            theme = CLASSIC
         } = params;
 
         this.rows = rows;
@@ -72,6 +73,8 @@ export class TetrisConsole {
             :
             getDefaultPlayerSound({source, volume})
         ;
+
+        this.theme = theme;
     }
 
     //MARK: Init
@@ -138,11 +141,13 @@ export class TetrisConsole {
 
         const piece = this.tetris.currentPiece;
 
+        const {styles, border, fill, empty} = this.theme;
+
         const rows = [];
 
         for (let i = 0; i < this.rows; i++) {
             
-            let row = '<!';
+            let row = applyANSI(border.left, styles.border);
 
             for (let j = 0; j < this.columns; j++) {
 
@@ -171,15 +176,15 @@ export class TetrisConsole {
                 
                 if(letter !== 0){
 
-                    row += PIECE_COLORS[letter]('[]');
+                    row += applyANSI(fill, styles[letter]);
                 }
                 else {
                     
-                    row += '--';
+                    row += applyANSI(empty, styles.empty);
                 }
             }
             
-            row += '!>';
+            row += applyANSI(border.right, styles.border);
             
             rows.push(row);
         }
@@ -205,7 +210,7 @@ export class TetrisConsole {
 
                     if(letter !== 0){
 
-                        row += PIECE_COLORS[letter]('[]');
+                        row += applyANSI(fill, styles[letter]);;
                     }
                     else {
                         
@@ -217,7 +222,11 @@ export class TetrisConsole {
             }
         }
 
-        rows.push(`<!${'=='.repeat(this.columns)}!>\n`);
+        const [left, center, right] = border.bottom;
+
+        rows.push(
+            applyANSI(`${left}${center.repeat(this.columns)}${right}\n`, styles.border)
+        );
         
         process.stdout.cursorTo(0, 0);
         process.stdout.clearScreenDown();

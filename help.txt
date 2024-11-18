@@ -1,5 +1,14 @@
 Tetris Console Game - Command Line Help
 
+Controls:
+  Arrow Left  - Move the piece left.
+  Arrow Right - Move the piece right.
+  Arrow Down  - Move the piece down faster.
+  Arrow Up    - Rotate the piece.
+  C           - Save the current piece to hold.
+  Space       - Drop the piece instantly to the bottom.
+  Ctrl + C    - Quit the game.
+
 Usage:
   tetris-console [options]
 
@@ -7,6 +16,12 @@ Options:
   --version, -v          Display the current version of Tetris Console Game.
 
   --help, -h             Show this help information.
+
+  --theme <style>, -t <style>
+                         Change the Tetris game theme. Options include:
+                         'classic' - Traditional Tetris appearance, default option
+                         'modern' - A contemporary, sleek design
+                         'hearts' - A playful, heart-themed design
 
   --rows <number>, -r <number>
                          Set the number of rows for the Tetris board, default: 20.
@@ -40,5 +55,9 @@ Examples:
                                  Start the game with a 20x10 board, volume at 80%, and use the specified `.wav` file.
 
   tetris-console --source "#tetrio-best-theme" --player vlc --volume 1
+
+  tetris-console -t modern       Launch Tetris with the modern theme.
+  
+  tetris-console --theme hearts  Use the hearts theme for the game.
 
 For more information, visit: https://github.com/FrancoJavierGadea/tetris-console

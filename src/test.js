@@ -3,14 +3,14 @@ import path from "node:path";
 
 
 //MARK: Test tetris
-// const tetris = new TetrisConsole();
+const tetris = new TetrisConsole();
 
-// tetris.init();
-
-
-const source = './assets/tetrio-best-theme.mp3';
+tetris.init();
 
 
-console.log(path.isAbsolute(source));
+// const source = './assets/tetrio-best-theme.mp3';
 
-console.log(path.join(import.meta.dirname, './', source));
+
+// console.log(path.isAbsolute(source));
+
+// console.log(path.join(import.meta.dirname, './', source));

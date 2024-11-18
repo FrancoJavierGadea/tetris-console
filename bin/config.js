@@ -37,6 +37,11 @@ const CONFIG = [
         alias: '-s',
         type: 'path'
     },
+    {
+        name: '--theme',
+        alias: '-t',
+        type: 'string'
+    },
 ];
 
 

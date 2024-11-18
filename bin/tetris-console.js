@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 
 import TetrisConsole from "../src/index.js";
+import { getTheme } from "../src/tetris/tetris-console-themes.js";
 import { getConfig } from "./config.js";
 import { getHelp, getVersion } from "./utils.js";
 
 
 const config = getConfig();
-
-console.log(config);
 
 switch (true) {
 
@@ -29,7 +28,8 @@ const tetris = new TetrisConsole({
     player: config['--player'],
     rows: config['--rows'],
     columns: config['--columns'],
-    source: config['--source']
+    source: config['--source'],
+    theme: getTheme(config['--theme'])
 });
 
 tetris.init();
