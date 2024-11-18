@@ -1,7 +1,7 @@
 {
   "name": "tetris-console",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Play tetris in the console and fun",
   "keywords": ["tetris", "console game"],
   "author": {

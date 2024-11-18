@@ -56,9 +56,9 @@ export const MODERN = {
     fill: '❑ ',
     empty: '☐ ',
     border: {
-        left: '█', 
-        right: '█', 
-        bottom: ['▀', '▀▀', '▀']
+        left: '█ ', 
+        right: ' █', 
+        bottom: ['▀▀', '▀▀', '▀▀']
     },
     styles: {
         'T': [105, 30],
