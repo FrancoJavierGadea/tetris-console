@@ -2,6 +2,68 @@
 
 Welcome to Tetris Console Game! Play the classic Tetris directly in your terminal.
 
+### Controls
+
+- `Arrow Left`: Move the piece left.
+- `Arrow Right`: Move the piece right.
+- `Arrow Down`: Move the piece down faster.
+- `Arrow Up`: Rotate the piece.
+- `C`: Save the current piece to hold.
+- `Space`: Drop the piece instantly to the bottom.
+- `Ctrl + C`: Quit the game.
+
+### Command-Line Options
+
+- `--version`, `-v`
+
+- `--help`, `-h`
+
+- `--theme <style>`, `-t <style>` 
+  
+    Change the Tetris game theme. Available options are: `"classic"` `"modern"` `"hearts"`
+
+    Default: `"classic"`
+
+- `--columns <int number>`, `-c <int number>` 
+  
+    Set the number of columns for the Tetris board
+  
+    Default: `10`
+
+- `--rows <int number>`, `-r <int number>` 
+  
+    Set the number of rows for the Tetris board
+
+    Default: `20`
+
+- `--player <program>`, `-p <program>` 
+  
+    Specify the program to play the game music. Options include: `"vlc"` `"powershell"` `"aplay"` `"afplay"`
+
+- `--volume <value>`, `-V <value  >` 
+  
+    Set the volume level for the game music. Accepts a value between 0.0 (mute) and 1.0 (full volume). 
+
+    > **Note**: The `--volume` option is not supported by `aplay` on Linux.
+
+    Default: `0.5`
+
+- `--source <path>`, `-s <path>` 
+  
+  Use a custom song by specifying the path to an audio file. You can also use predefined values like `#tetris`, `#tetris-classic`, or `#tetrio-best-theme` for songs included in the `assets` folder.
+
+  > **Note**: `.mp3` files work with all players except `aplay`, which only supports `.wav` files.
+
+  Default: `"#tetris"`
+
+<br>
+
+## Try with `npx`
+
+```sh
+npx https://github.com/FrancoJavierGadea/tetris-console.git tetris-console
+```
+
 <br>
 
 ## Global Installation
@@ -22,8 +84,6 @@ Once installed, start the game with:
 ```sh
 tetris-console
 ```
-
-<br>
 
 > If you want to uninstall the game:
 > 
@@ -76,8 +136,16 @@ If you want to integrate it into your own JavaScript code:
 
 ```js
 import TetrisConsole from "tetris-console";
+import { CLASSIC } from "./tetris-console-themes.js";
 
-const tetris = new TetrisConsole();
+const tetris = new TetrisConsole({
+    rows: 20,
+    columns: 10,
+    theme: CLASSIC,
+    volume: 0.5,
+    player: 'vlc',
+    source: path.join(import.meta.dirname, '../assets/tetris.wav'),
+});
 
 tetris.init();
 ```
