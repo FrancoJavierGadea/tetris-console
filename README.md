@@ -55,31 +55,31 @@ tetris-console
   
     Change the Tetris game theme. Available options are: `"classic"` `"modern"` `"hearts"`
 
-    Default: `"classic"`
+    **Default**: `"classic"`
 
 - `--columns <int number>`, `-c <int number>` 
   
     Set the number of columns for the Tetris board
   
-    Default: `10`
+    **Default**: `10`
 
 - `--rows <int number>`, `-r <int number>` 
   
     Set the number of rows for the Tetris board
 
-    Default: `20`
+    **Default**: `20`
 
 - `--player <program>`, `-p <program>` 
   
     Specify the program to play the game music. Options include: `"vlc"` `"powershell"` `"aplay"` `"afplay"`
 
-- `--volume <value>`, `-V <value  >` 
+- `--volume <number>`, `-V <number>` 
   
     Set the volume level for the game music. Accepts a value between 0.0 (mute) and 1.0 (full volume). 
 
     > **Note**: The `--volume` option is not supported by `aplay` on Linux.
 
-    Default: `0.5`
+    **Default**: `0.5`
 
 - `--source <path>`, `-s <path>` 
   
@@ -87,7 +87,7 @@ tetris-console
 
   > **Note**: `.mp3` files work with all players except `aplay`, which only supports `.wav` files.
 
-  Default: `"#tetris"`
+  **Default**: `"#tetris"`
 
 <br>
 
