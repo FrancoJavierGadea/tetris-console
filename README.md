@@ -2,7 +2,7 @@
 
 Welcome to Tetris Console Game! Play the classic Tetris directly in your terminal.
 
-https://github.com/user-attachments/assets/70566653-ee2e-48da-9c90-986b3068b9e6
+https://github.com/user-attachments/assets/51378f97-acf6-4da9-b89c-2d3e6be210f5
 
 ## Global Installation
 
