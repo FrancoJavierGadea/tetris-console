@@ -68,8 +68,8 @@ export const MODERN = {
         'S': [102, 30],
         'Z': [101, 30],
         'O': [103, 30],
-        empty: [30],
-        border: [90]
+        empty: [37],
+        border: [37]
     }
 };
 
