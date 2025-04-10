@@ -1,13 +1,13 @@
 
 /**
  * @typedef {Object} TetrisConsoleTheme
- *  @property {string} fill - The character used to represent filled cells
- *  @property {string} empty - The character used to represent empty cells
- *  @property {Object} border - The characters used to represent the border of the game
- *   @property {string} border.left - The character for the left border
- *   @property {string} border.right - The character for the right border
- *   @property {string[]} border.bottom - An array of strings representing the bottom border parts: `[left, center, right]`
- *  @property {Object.<string, number[]>} styles - The ANSI styles for different Tetris piece types, example:
+ * * @property {string} fill - The character used to represent filled cells
+ * * @property {string} empty - The character used to represent empty cells
+ * * @property {Object} border - The characters used to represent the border of the game
+ * * * @property {string} border.left - The character for the left border
+ * * * @property {string} border.right - The character for the right border
+ * * * @property {string[]} border.bottom - An array of strings representing the bottom border parts: `[left, center, right]`
+ * * @property {Object.<string, number[]>} styles - The ANSI styles for different Tetris piece types, example:
  *  ```
  *  {
  *      'T': [105, 30],

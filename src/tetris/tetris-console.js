@@ -1,10 +1,16 @@
 import path from "node:path";
 import { Tetris } from "./tetris.js";
-import { ServerLogger } from "../utils/Server-logger.js";
 import { getDefaultPlayerSound, getPlayerSound } from "../utils/PlaySound/PlayerSound.js";
 import { CLASSIC, MODERN } from "./tetris-console-themes.js";
 
 /**
+ * 
+ * @typedef {Object} TetrisConsoleEvents
+ * * @property {CustomEvent} start
+ * * @property {CustomEvent} end
+ * * @property {CustomEvent<{key}>} keydown
+ * 
+ * 
  * @typedef {Object} TetrisConsoleParams
  *  @property {number} rows Number of rows for the Tetris board, default `20`
  *  @property {number} columns Number of columns for the Tetris board, default `10`
@@ -21,8 +27,10 @@ const KEYS = {
     ArrowUp: '\u001b[A',
     ArrowLeft: '\u001b[D',
     ArrowRight: '\u001b[C',
-    Space: ' '
+    Space: ' ',
+    Ctrl_C: '\u0003'
 }
+
 
 function applyANSI(text, styles = []){
 
@@ -35,6 +43,7 @@ function applyANSI(text, styles = []){
 export class TetrisConsole {
 
     #soundPlayer = null;
+    #eventTarget = new EventTarget();
 
     /**
      * @constructor
@@ -57,14 +66,8 @@ export class TetrisConsole {
         this.player = player;
         this.volume = volume;
 
-
-        this.LOGS = new ServerLogger();
-
         this.tetris = new Tetris({
             rows, columns, 
-            logs: {
-                out: (...args) => this.LOGS.log(...args)
-            }
         });
         
         //Music
@@ -86,12 +89,18 @@ export class TetrisConsole {
         //MARK: Events
         process.stdin.on('data', (key) => {
 
+            this.#eventTarget.dispatchEvent(new CustomEvent('keydown', { 
+                detail: {
+                    key: Object.keys(KEYS).find(k => key === KEYS[k]) ?? key
+                } 
+            }));
+
             // Si presionas Ctrl+C, se sale del programa
-            if (key === '\u0003') { 
+            if (key === KEYS.Ctrl_C) { 
 
                 this.#soundPlayer.stop();
+                this.#eventTarget.dispatchEvent(new CustomEvent('end'));
 
-                this.LOGS.end();
                 process.exit();
             }
 
@@ -117,7 +126,6 @@ export class TetrisConsole {
                     this.tetris.movePieceToDown();
                     break;
 
-
                 case 'c':
                 case 'C':
                     this.tetris.savePiece();
@@ -134,6 +142,8 @@ export class TetrisConsole {
         this.tetris.spawnPiece();
         this.draw();
         this.play();
+
+        this.#eventTarget.dispatchEvent(new CustomEvent('start'));
     }
 
     //MARK: Draw
@@ -258,5 +268,34 @@ export class TetrisConsole {
 
             clearInterval(this.#intervalID)
         }
+    }
+
+
+    //MARK: Events
+    /**
+     * @template {keyof TetrisConsoleEvents} K
+     * @param {K} event
+     * @param {(e:CustomEvent<TetrisConsoleEvents[K]>) => void} listener
+     */
+    on(event, listener){
+        this.#eventTarget.addEventListener(event, listener);
+    }
+
+    /**
+     * @template {keyof TetrisConsoleEvents} K
+     * @param {K} event
+     * @param {(e:CustomEvent<TetrisConsoleEvents[K]>) => void} listener
+     */
+    once(event, listener){
+        this.#eventTarget.addEventListener(event, listener, { once: true });
+    }
+
+    /**
+     * @template {keyof TetrisConsoleEvents} K
+     * @param {K} event
+     * @param {(e:CustomEvent<TetrisConsoleEvents[K]>) => void} listener
+     */
+    off(event, listener){
+        this.#eventTarget.removeEventListener(event, listener);
     }
 }

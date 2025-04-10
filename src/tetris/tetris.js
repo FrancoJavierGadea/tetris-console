@@ -2,6 +2,19 @@
 import { SPAWN_MODES, COLLISIONS } from "./tetris-constants.js";
 import { getPieceByName, getRandomPiece, PIECES, rotatePiece } from "./tetris-pieces.js";
 
+
+/**
+ * @typedef {import("./tetris-constants.js").SPAWN_MODES} SPAWN_MODES
+ * @typedef {import("./tetris-pieces.js").TetrisPiece} TetrisPiece
+ * 
+ * @typedef {Object} TetrisEvents
+ * * @property {CustomEvent<{ name: string }>} spawn-piece
+ * * @property {CustomEvent<{ collision: boolean, direction: string }>} move-piece
+ * * @property {CustomEvent<{ collision: boolean, direction: string }>} rotate-piece
+ * * @property {CustomEvent<{ rowCounter: number }>} clear-rows
+ * * @property {CustomEvent<>} reset-board
+ */
+
 /**
  * @class Tetris
  */
@@ -10,15 +23,17 @@ export class Tetris {
     /**@type {(String | 0)[][]} */
     board = null;
 
-    /**@type {import("./tetris-pieces.js").TetrisPiece} */
+    /**@type {TetrisPiece} */
     currentPiece = null;
 
-    /**@type {import("./tetris-pieces.js").TetrisPiece} */
+    /**@type {TetrisPiece} */
     savedPiece = null;
+
+    #eventTarget = new EventTarget();
 
     /**
      * @constructor
-     * @param {{rows:Number, columns:Number, spawnMode:String, logs:null | {out: (...args) => {}}}} params 
+     * @param {{rows:Number, columns:Number, spawnMode:keyof SPAWN_MODES}} params 
      */
     constructor(params =  {}){
 
@@ -26,12 +41,8 @@ export class Tetris {
             rows = 20, 
             columns = 10,
             spawnMode = SPAWN_MODES.RANDOM_ROTATE,
-            logs = {
-                out: (...args) => console.log(...args)
-            }
         } = params;
 
-        
         this.rows = rows;
         this.columns = columns;
         
@@ -40,11 +51,8 @@ export class Tetris {
             return new Array(columns).fill(0);
         });
         
-        /**@type {import("./tetris-constants.js").SPAWN_MODES} */
+        /**@type {keyof SPAWN_MODES} */
         this.spawnMode = spawnMode;
-        
-        /**@type {null | {out: (...args) => {}}} */
-        this.logs = logs;
 
         this.gameStats = {
             completedRows: 0
@@ -54,17 +62,25 @@ export class Tetris {
 
     //MARK: Spawn piece
     /**
-     * Spawns a new piece and sets the **current piece** according to the specified **spawn mode**:
+     * Spawns a new Tetris piece and sets it as the **current piece** based on the specified **spawn mode**.
      *
-     * - `SPAWN_MODES.RANDOM`: Spawns a piece at a random location.
+     * - `SPAWN_MODES.RANDOM`: Spawns a piece at a random column.
      * - `SPAWN_MODES.CENTER`: Spawns a piece in the center of the board.
-     * - `SPAWN_MODES.RANDOM_ROTATE`: Spawns a piece randomly and rotates it.
+     * - `SPAWN_MODES.RANDOM_ROTATE`: Spawns a piece randomly and applies a random rotation.
      *
-     * Resets the board if the previous **current piece** is high on the board.
+     * If the previous **current piece** is positioned too high on the board (row <= 1), 
+     * the game board is reset, and the completed rows counter is cleared.
+     *
+     * @param {"T" | "L" | "J" | "S" | "Z" | "O" | "I" | null} pieceName - The name of the piece to spawn. If `null`, a random piece is generated.
      */
     spawnPiece(pieceName){
 
-        if(this.currentPiece?.position?.row <= 1) this.resetBoard();
+        //Reset Game when the previous piece is out of the board
+        if(this.currentPiece?.position?.row <= 1){
+
+            this.gameStats.completedRows = 0;
+            this.resetBoard();
+        }
 
         let piece = pieceName ? getPieceByName(pieceName) : getRandomPiece();
         
@@ -89,9 +105,9 @@ export class Tetris {
             if(Math.random() > 0.5) piece = rotatePiece(piece);
         }
 
-        this.currentPiece = piece;
+        this.currentPiece = piece
 
-        this.logs?.out('Spawn piece:', {name: piece.name});
+        this.#eventTarget.dispatchEvent(new CustomEvent('spawn-piece', { detail: {name: piece.name} }));
 
         this.#hasSwapped = false;
     }
@@ -167,13 +183,13 @@ export class Tetris {
     movePiece({columns = 0, rows = 0}){
 
         //Detect collisions
-        const {collision, dir} = this.detectCollisions({columns, rows});
+        const {collision, direction} = this.detectCollisions({columns, rows});
         
-        this.logs?.out('Move:', {collision, dir});
+        this.#eventTarget.dispatchEvent(new CustomEvent('move-piece', { detail: {collision, direction} }));
 
         if(collision){
 
-            if(dir === COLLISIONS.BOTTOM){
+            if(direction === COLLISIONS.BOTTOM){
 
                 //Put the current piece
                 this.putPiece();
@@ -224,9 +240,9 @@ export class Tetris {
         
         const rotatedPiece = rotatePiece(piece);
 
-        const {collision, dir} = this.detectCollisions({piece: rotatedPiece});
+        const {collision, direction} = this.detectCollisions({piece: rotatedPiece});
 
-        this.logs?.out('Rotate:', {collision, dir});
+        this.#eventTarget.dispatchEvent(new CustomEvent('rotate-piece', { detail: {collision, direction} }));
 
         if(collision) return;
 
@@ -234,7 +250,14 @@ export class Tetris {
     }
 
     //MARK: Detect collisions
-    detectCollisions({rows = 0, columns = 0, piece = this.currentPiece} = {}){
+    /**
+     * 
+     * @param {{rows:number, columns:number, piece:TetrisPiece}} param0 
+     * @returns {collision:boolean, direction:string}
+     */
+    detectCollisions(params = {}){
+
+        const {rows = 0, columns = 0, piece = this.currentPiece} = params;
 
         const size = {
             rows: piece.array.length,
@@ -253,20 +276,20 @@ export class Tetris {
                     const c = piece.position.column + columns + j;
 
                     //Check collisions with the board
-                    if(c < 0) return {collision:true, dir: COLLISIONS.LEFT };
-                    if(c >= this.columns) return {collision:true, dir: COLLISIONS.RIGHT };
-                    if(r >= this.rows) return {collision:true, dir: COLLISIONS.BOTTOM };
+                    if(c < 0) return {collision:true, direction: COLLISIONS.LEFT };
+                    if(c >= this.columns) return {collision:true, direction: COLLISIONS.RIGHT };
+                    if(r >= this.rows) return {collision:true, direction: COLLISIONS.BOTTOM };
 
                     //Check collisions with other pieces
                     const boardLetter = this.board[r][c];
 
                     if(boardLetter !== 0){
 
-                        if(rows >= 1) return {collision:true, dir: COLLISIONS.BOTTOM };
-                        if(columns < 0) return {collision:true, dir: COLLISIONS.LEFT };
-                        if(columns > 0) return {collision:true, dir: COLLISIONS.RIGHT };
+                        if(rows >= 1) return {collision:true, direction: COLLISIONS.BOTTOM };
+                        if(columns < 0) return {collision:true, direction: COLLISIONS.LEFT };
+                        if(columns > 0) return {collision:true, direction: COLLISIONS.RIGHT };
 
-                        return {collision: true, dir: COLLISIONS.NONE};
+                        return {collision: true, direction: COLLISIONS.NONE};
                     }
 
                       
@@ -274,7 +297,7 @@ export class Tetris {
             }  
         }
 
-        return {collision: false, dir: COLLISIONS.NONE};
+        return {collision: false, direction: COLLISIONS.NONE};
     }
 
 
@@ -289,7 +312,7 @@ export class Tetris {
             } 
         }
 
-        this.logs?.out('Reset board');
+        this.#eventTarget.dispatchEvent(new CustomEvent('reset-board', { detail: {} }));
     }
 
 
@@ -344,10 +367,38 @@ export class Tetris {
 
         if(rowCounter > 0){
 
-            this.logs?.out(`Clear rows: ${rowCounter}`);
+            this.#eventTarget.dispatchEvent(new CustomEvent('clear-rows', { detail: {rowCounter} }));
+
             this.gameStats.completedRows += rowCounter;
         } 
     }
 
 
+    //MARK: Events
+    /**
+     * @template {keyof TetrisEvents} K
+     * @param {K} event
+     * @param {(e:TetrisEvents[K]) => void} listener
+     */
+    on(event, listener){
+        this.#eventTarget.addEventListener(event, listener);
+    }
+
+    /**
+     * @template {keyof TetrisEvents} K
+     * @param {K} event
+     * @param {(e:TetrisEvents[K]) => void} listener
+     */
+    once(event, listener){
+        this.#eventTarget.addEventListener(event, listener, { once: true });
+    }
+
+    /**
+     * @template {keyof TetrisEvents} K
+     * @param {K} event
+     * @param {(e:TetrisEvents[K]) => void} listener
+     */
+    off(event, listener){
+        this.#eventTarget.removeEventListener(event, listener);
+    }
 }
