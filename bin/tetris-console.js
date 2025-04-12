@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-import TetrisConsole from "../src/index.js";
-import { getTheme } from "../src/tetris/tetris-console-themes.js";
+import { getTheme, TetrisConsole } from "../src/index.node.js";
 import { getConfig } from "./config.js";
 import { getHelp, getVersion } from "./utils.js";
 

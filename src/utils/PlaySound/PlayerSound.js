@@ -43,3 +43,5 @@ export function getPlayerSound(player, params){
             return new PlayWithVLC(params);
     }
 }
+
+export {PlayWithAfplay, PlayWithPowershell, PlayWithVLC, PlayWithAplay}

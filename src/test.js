@@ -1,11 +1,12 @@
 import { TetrisConsole } from "./tetris/tetris-console.js";
 import path from "node:path";
 import { ServerLogger } from "./utils/Server-logger.js";
-
-
+import { getTheme } from "./index.node.js";
 
 //MARK: Test tetris
-const tetris = new TetrisConsole();
+const tetris = new TetrisConsole({
+    theme: getTheme('modern')
+});
 
 //Showlogs: curl -N -H "Accept: text/event-stream" http://localhost:3300/logs
 const logger = new ServerLogger();

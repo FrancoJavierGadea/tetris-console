@@ -21,5 +21,19 @@
   "bin": {
     "tetris-console": "./bin/tetris-console.js"
   },
+  "exports": {
+    ".": { "default": "./src/index.node.js" },
+
+    "./node": { "default": "./src/index.node.js" },
+    "./browser": { "default": "./src/index.browser.js" },
+
+    "./pieces": { "default": "./src/tetris/tetris-pieces.js" },
+    "./themes": { "default": "./src/tetris/tetris-console-themes.js" },
+    "./tetris-console": { "default": "./src/tetris/tetris-console.js" },
+    "./tetris": { "default": "./src/tetris/tetris.js" },
+    "./constants": { "default": "./src/tetris/tetris-constants.js" },
+    "./server-logger": { "default": "./src/utils/Server-logger.js" },
+    "./play-sound": { "default": "./src/utils/PlaySound/PlayerSound.js" }
+  },
   "dependencies": {}
 }
